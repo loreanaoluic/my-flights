@@ -58,6 +58,6 @@ My flights je aplikacija pomoću koje se vrši pretraživanje i rezervacija avio
 
 <!-- DIPLOMSKI RAD -->
 ## Diplomski rad
-Implementiranje naprednog algoritma za pretragu koji će korisniku omogućiti da prilikom pretrage leta prikaže sve moguće putanje između dve uneta aerodroma. Rezultati će biti rangirani po određenim kriterijumima (najjeftiniji, najmanje presedanja, najkraće vreme trajanja letova, itd.)
+Implementiranje naprednog algoritma za pretragu (Depth First Search) koji će korisniku omogućiti da prilikom pretrage leta prikaže sve moguće putanje između dva uneta aerodroma. Rezultati će biti rangirani po određenim kriterijumima (najjeftiniji, najmanje presedanja, najkraće vreme trajanja letova, itd.)
 
 SW-60/2018 Loreana Oluić
