@@ -3,12 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { LoginGuard } from './guards/login.guard';
 import { BaseLayoutComponent } from './pages/base-layout/base-layout.component';
+import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
-  // {
-  //   path:"login",
-  //   component: LoginComponent
-  // },
+  {
+    path:"home",
+    component: HomeComponent
+  },
+  {
+    path:"login",
+    component: LoginComponent
+  },
   {
     path:"",
     component: BaseLayoutComponent,

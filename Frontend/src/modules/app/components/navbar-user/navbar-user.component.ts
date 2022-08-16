@@ -19,8 +19,12 @@ export class NavbarUserComponent implements OnInit {
     this.currentRole = this.authService.getCurrentUser()?.dtype;
   }
 
-  logout(){
+  logOut() {
     this.authService.logout();
+    this.signIn();
+  }
+
+  signIn() {
     this.router.navigate(["login"]);
   }
 }

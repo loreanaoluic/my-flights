@@ -13,13 +13,15 @@ import { NavbarUserComponent } from './components/navbar-user/navbar-user.compon
 import { BaseLayoutComponent } from './pages/base-layout/base-layout.component';
 import { InterceptorInterceptor } from './interceptors/interceptor.interceptor';
 import { AuthService } from './services/auth.service';
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NavbarUserComponent,
-    BaseLayoutComponent
+    BaseLayoutComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

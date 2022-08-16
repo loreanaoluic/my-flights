@@ -1,0 +1,79 @@
+.background {
+    background-image: url('https://wallpaperaccess.com/full/1287373.jpg');
+
+    /* Set rules to fill background */
+    min-height: 100%;
+    min-width: 1024px;
+        
+    /* Set up proportionate scaling */
+    width: 100%;
+    height: auto;
+        
+    /* Set up positioning */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-size: 100%;
+}
+
+@media screen and (max-width: 1024px) { /* Specific to this particular image */
+  img.bg {
+    left: 50%;
+    margin-left: -512px;   /* 50% */
+  }
+}
+
+.title {
+    margin-top: 120px;
+    margin-left: 240px;
+    font-size:70px;
+    color:#860202;
+    font-weight:500;
+    
+}
+
+.description {
+    margin-left: 240px;
+    font-size:20px;
+    color:#a30505;
+}
+
+.book {
+    margin-top: 40px;
+    margin-left: 240px;
+    
+}
+
+.book {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: #860202 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #860202;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 13px;
+  line-height: 29px;
+  padding: 0 10px 0 11px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 140px;
+  height: 40px;
+  outline: none;
+}
+
+.book:hover {
+  background-color: #f7fafa;
+}
+
+.book:focus {
+  border-color: #008296;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  outline: 0;
+}

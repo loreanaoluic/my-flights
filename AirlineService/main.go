@@ -2,14 +2,10 @@ package main
 
 import (
 	"github.com/my-flights/AirlineService/db"
-	"github.com/my-flights/AirlineService/handlers"
-	"github.com/my-flights/AirlineService/repository"
 	"github.com/my-flights/AirlineService/router"
 )
 
 func main() {
-	dbConn := db.Init()
-	repository := repository.NewRepository(dbConn)
-	flightHandler := handlers.NewAirlinesHandler(repository)
-	router.HandleRequests(flightHandler)
+	db.Init()
+	router.HandleRequests()
 }

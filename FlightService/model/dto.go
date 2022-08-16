@@ -7,7 +7,7 @@ type FlightDTO struct {
 	PlaceOfArrival     string  `gorm:"not null"`
 	TimeOfDeparture    string  `gorm:"not null"`
 	TimeOfArrival      string  `gorm:"not null"`
-	AirlineID          uint    `gorm:"not null"`
+	Airline            string  `gorm:"not null"`
 	FlightStatus       string  `gorm:"not null"`
 	EconomyClassPrice  float32 `gorm:"not null;min:0.0"`
 	BusinessClassPrice float32 `gorm:"not null;min:0.0"`
