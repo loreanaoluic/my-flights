@@ -4,7 +4,6 @@ import { AuthService } from 'src/modules/app/services/auth.service';
 import { GuestService } from '../../services/guest.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-all-flights',
@@ -14,6 +13,18 @@ import { filter } from 'rxjs/operators';
 export class AllFlightsComponent implements OnInit {
   flights: Flight[] = [];
   currentRole : any
+  travelClasses: any[] = [
+    { name: 'Economy class', value: 1 },
+    { name: 'Business class', value: 2 },
+    { name: 'First class', value: 3 }
+  ];
+
+  selectedTravelClass: string = 'Economy class';
+  flyingFrom: string = '';
+  flyingTo: string = '';
+  departing: Date;
+  passengerNumber: number = 1;
+  travelClass: string = '';
 
   constructor(
     private guestService: GuestService,
@@ -32,6 +43,22 @@ export class AllFlightsComponent implements OnInit {
 
     this.route.queryParams
       .subscribe(params => {
+        this.flyingFrom = params['flyingFrom'];
+        this.flyingTo = params['flyingTo'];
+
+        var splitted = params['departing'].split(" ", 2);
+        this.departing = splitted[0]
+
+        this.passengerNumber = Number(params['passengerNumber']);
+
+        if (params['travelClass'] == 1) {
+          this.travelClass = "Economy class"
+        } else if (params['travelClass'] == 2) {
+          this.travelClass = "Business class"
+        } else if (params['travelClass'] == 3) {
+          this.travelClass = "First class"
+        }
+
         this.guestService.searchFlights(params['flyingFrom'], params['flyingTo'], params['departing'], 
         params['passengerNumber'], params['travelClass'])
         .subscribe((response) => {
@@ -43,6 +70,35 @@ export class AllFlightsComponent implements OnInit {
 
   signIn() {
     this.router.navigate(["login"]);
+  }
+
+  searchFlights() {
+
+    const flyingFrom = (<HTMLInputElement>document.getElementById("flyingFrom")).value;
+    const flyingTo = (<HTMLInputElement>document.getElementById("flyingTo")).value;
+    const departing = (<HTMLInputElement>document.getElementById("departing")).value;
+    const passengerNumber = (<HTMLInputElement>document.getElementById("passengerNumber")).value;
+    let travelClass = 1;
+
+    if (this.selectedTravelClass == 'Economy class') {
+      travelClass = 1;
+    } else if (this.selectedTravelClass == 'Business class') {
+      travelClass = 2;
+    } else if (this.selectedTravelClass == 'First class') {
+      travelClass = 3;
+    }
+
+    this.router.navigate(
+      ["guest/all-flights"],
+      { queryParams: { 
+          flyingFrom: flyingFrom, 
+          flyingTo: flyingTo, 
+          departing: departing, 
+          passengerNumber: passengerNumber, 
+          travelClass: travelClass 
+        },
+      },
+    );
   }
 
 }

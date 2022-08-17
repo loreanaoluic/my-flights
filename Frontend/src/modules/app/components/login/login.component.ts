@@ -4,6 +4,7 @@ import { AuthService } from 'src/modules/app/services/auth.service';
 import { Router } from '@angular/router';
 import { Token } from 'src/modules/app/model/Token';
 import { ToastrService } from 'ngx-toastr';
+import { Register } from '../../model/Register';
 
 @Component({
   selector: 'app-login',
@@ -43,6 +44,20 @@ export class LoginComponent {
         if (error.status === 400) this.toastrService.error('Bad credentials!');
       },
     });
+  }
+
+  signIn() {
+
+  }
+
+  signUp() {
+    const newUser: Register = {
+      username: (<HTMLInputElement>document.getElementById("username")).value,
+      password: (<HTMLInputElement>document.getElementById("password")).value,
+      emailAddress: (<HTMLInputElement>document.getElementById("email")).value
+    };
+
+    this.authService.register(newUser);
   }
 
 }
