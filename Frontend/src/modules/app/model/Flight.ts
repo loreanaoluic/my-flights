@@ -4,7 +4,7 @@ export interface Flight{
 	PlaceOfArrival : string
 	TimeOfDeparture : string
 	TimeOfArrival : string
-	AirlineID : number
+	Airline : number
 	FlightStatus : string
 	EconomyClassPrice : number
 	BusinessClassPrice : number

@@ -14,19 +14,39 @@ export class SearchFlightsComponent {
     { name: 'First class', value: 3 }
   ];
 
-  selectedTravelClass: number = 1;
+  selectedTravelClass: string = 'Economy class';
 
   constructor(
     private router: Router
   ) { }
 
   searchFlights() {
-    this.router.navigate(["guest/all-flights"]);
+
     const flyingFrom = (<HTMLInputElement>document.getElementById("flyingFrom")).value;
     const flyingTo = (<HTMLInputElement>document.getElementById("flyingTo")).value;
     const departing = (<HTMLInputElement>document.getElementById("departing")).value;
-    const returning = (<HTMLInputElement>document.getElementById("returning")).value;
     const passengerNumber = (<HTMLInputElement>document.getElementById("passengerNumber")).value;
+    let travelClass = 1;
+
+    if (this.selectedTravelClass == 'Economy class') {
+      travelClass = 1;
+    } else if (this.selectedTravelClass == 'Business class') {
+      travelClass = 2;
+    } else if (this.selectedTravelClass == 'First class') {
+      travelClass = 3;
+    }
+
+    this.router.navigate(
+      ["guest/all-flights"],
+      { queryParams: { 
+          flyingFrom: flyingFrom, 
+          flyingTo: flyingTo, 
+          departing: departing, 
+          passengerNumber: passengerNumber, 
+          travelClass: travelClass 
+        },
+      },
+    );
   }
 
 }

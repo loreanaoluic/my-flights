@@ -22,4 +22,30 @@ export class GuestService {
       responseType: "json",
     });
   }
+
+  searchFlights(flyingFrom: string, flyingTo: string, departing: string, passengerNumber: string, 
+    travelClass: string): Observable<Flight[]>{
+      if (!flyingFrom)
+        flyingFrom = ''
+      if (!flyingTo)
+        flyingTo = ''
+      if (!departing)
+        departing = ''
+      if (!passengerNumber)
+        passengerNumber = ''
+      if (!travelClass)
+        travelClass = ''
+
+    return this.http.get<Flight[]>("http://localhost:8080/api/flights/search-all-flights", {
+      headers: this.headers,
+      responseType: "json",
+      params: {
+        flyingFrom: flyingFrom, 
+        flyingTo: flyingTo, 
+        departing: departing, 
+        passengerNumber: passengerNumber, 
+        travelClass: travelClass
+      }
+    });
+  }
 }

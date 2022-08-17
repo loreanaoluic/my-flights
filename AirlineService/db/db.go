@@ -51,9 +51,7 @@ var airlines = []model.Airline{
 	},
 }
 
-var Db *gorm.DB
-
-func Init() {
+func Init() *gorm.DB {
 	dsn := "host=localhost user=postgres password=loreana dbname=flights port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
@@ -69,4 +67,6 @@ func Init() {
 	for _, airline := range airlines {
 		db.Create(&airline)
 	}
+
+	return db
 }

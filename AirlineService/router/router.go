@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	handler "github.com/my-flights/AirlineService/handlers"
+	"github.com/my-flights/AirlineService/handlers"
 )
 
-func HandleRequests() {
+func HandleRequests(handler *handlers.AirlinesHandler) {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/api/airlines/get-all-airlines", handler.FindAllAirlines).Methods(http.MethodGet)

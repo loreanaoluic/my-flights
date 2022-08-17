@@ -1,11 +1,6 @@
 package model
 
-import (
-	"github.com/my-flights/AirlineService/repository"
-)
-
 func (flight *Flight) ToFlightDTO() FlightDTO {
-	airline, _ := repository.FindAirlineById(flight.AirlineID)
 
 	return FlightDTO{
 		Id:                 flight.ID,
@@ -14,7 +9,7 @@ func (flight *Flight) ToFlightDTO() FlightDTO {
 		PlaceOfArrival:     flight.PlaceOfArrival,
 		TimeOfDeparture:    flight.TimeOfDeparture,
 		TimeOfArrival:      flight.TimeOfArrival,
-		Airline:            airline.Name,
+		Airline:            flight.AirlineName,
 		FlightStatus:       string(flight.FlightStatus),
 		EconomyClassPrice:  flight.EconomyClassPrice,
 		BusinessClassPrice: flight.BusinessClassPrice,

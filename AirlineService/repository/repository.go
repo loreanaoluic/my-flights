@@ -4,11 +4,18 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/my-flights/AirlineService/db"
 	"github.com/my-flights/AirlineService/model"
 
 	"gorm.io/gorm"
 )
+
+type Repository struct {
+	db *gorm.DB
+}
+
+func NewRepository(db *gorm.DB) *Repository {
+	return &Repository{db}
+}
 
 func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
@@ -30,12 +37,12 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func FindAllAirlines(r *http.Request) ([]model.Airline, int64, error) {
+func (repo *Repository) FindAllAirlines(r *http.Request) ([]model.Airline, int64, error) {
 	var airlines []model.Airline
 	var totalElements int64
 
-	result := db.Db.Scopes(Paginate(r)).Table("airlines").Find(&airlines)
-	db.Db.Table("airlines").Count(&totalElements)
+	result := repo.db.Scopes(Paginate(r)).Table("airlines").Find(&airlines)
+	repo.db.Table("airlines").Count(&totalElements)
 
 	if result.Error != nil {
 		return nil, totalElements, result.Error
@@ -44,8 +51,8 @@ func FindAllAirlines(r *http.Request) ([]model.Airline, int64, error) {
 	return airlines, totalElements, nil
 }
 
-func FindAirlineById(airlineId uint) (model.Airline, error) {
+func (repo *Repository) FindAirlineById(airlineId uint) (model.Airline, error) {
 	var airline model.Airline
-	db.Db.First(&airline, "ID = ?", airlineId)
+	repo.db.First(&airline, "ID = ?", airlineId)
 	return airline, nil
 }
