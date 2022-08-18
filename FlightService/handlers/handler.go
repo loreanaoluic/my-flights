@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/my-flights/FlightService/model"
 	"github.com/my-flights/FlightService/repository"
+
+	"github.com/gorilla/mux"
 )
 
 type FlightsHandler struct {
@@ -35,4 +38,38 @@ func (rh *FlightsHandler) SearchFlights(resWriter http.ResponseWriter, req *http
 	flightsDTO, _, _ := rh.repository.SearchFlights(req)
 
 	json.NewEncoder(resWriter).Encode(flightsDTO)
+}
+
+func (rh *FlightsHandler) CancelFlight(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	flightNumber := params["flightNumber"]
+
+	flightDTO, err := rh.repository.CancelFlight(flightNumber)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*flightDTO)
+}
+
+func (rh *FlightsHandler) CreateFlight(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	var newFlightDTO model.FlightDTO
+	json.NewDecoder(r.Body).Decode(&newFlightDTO)
+
+	flightDTO, err := rh.repository.CreateFlight(&newFlightDTO)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*flightDTO)
 }

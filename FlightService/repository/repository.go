@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -170,4 +171,36 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 	}
 
 	return flightsDTO, totalElements, nil
+}
+
+func (repo *Repository) CancelFlight(flightNumber string) (*model.FlightDTO, error) {
+	var flight model.Flight
+	result := repo.db.Table("flights").Where("flight_number = ?", flightNumber).First(&flight)
+
+	if result.Error != nil {
+		return nil, errors.New("Flight not found!")
+	}
+
+	flight.FlightStatus = model.CANCELED
+
+	result2 := repo.db.Table("flights").Save(&flight)
+
+	if result2.Error != nil {
+		return nil, errors.New("Flight cannot be canceled!")
+	}
+
+	var retValue model.FlightDTO = flight.ToFlightDTO()
+	return &retValue, nil
+}
+
+func (repo *Repository) CreateFlight(flightDTO *model.FlightDTO) (*model.FlightDTO, error) {
+	var flight model.Flight = flightDTO.ToFlight()
+	result := repo.db.Table("flights").Create(&flight)
+
+	if result.Error != nil {
+		return nil, errors.New("Flight cannot be created!")
+	}
+
+	var retValue model.FlightDTO = flight.ToFlightDTO()
+	return &retValue, nil
 }

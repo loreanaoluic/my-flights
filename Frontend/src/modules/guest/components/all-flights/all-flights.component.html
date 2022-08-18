@@ -1,6 +1,13 @@
 <div id="booking" class="section">
     <div class="section-center">
         <div class="container">
+            <div  *ngIf="currentRole === 'ADMIN'">
+                <br><br>
+                <button class="btn btn-success" type="button" (click)="openNewFlightModal()" 
+                data-toggle="modal" data-backdrop="static" data-keyboard="false"
+                > ADD NEW FLIGHT</button>
+                <br><br>
+            </div>
             <div class="row">
                 <div class="booking-form">
                     <form>
@@ -62,7 +69,9 @@
     </div>
 </div>
 
-
+<div  *ngIf="currentRole === 'ADMIN'">
+    <br><br>
+</div>
 
 <div class="container-flights">
     <div class="row-flights" *ngFor="let flight of flights">
@@ -115,7 +124,14 @@
                     </div>
                 </section>
                 <section class="strap">
-                    <div class="active" *ngIf="flight.FlightStatus === 'ACTIVE' && currentRole !== undefined">
+                    <div class="active" *ngIf="flight.FlightStatus !== 'CANCELED' && currentRole === 'ADMIN'">
+                        <div class="box">
+                            <button class="btn btn-danger" type="button" style="width: 160px;" (click)="cancelFlight(flight.FlightNumber)">
+                                CANCEL FLIGHT
+                            </button>
+                        </div>
+                    </div>
+                    <div class="active" *ngIf="flight.FlightStatus === 'ACTIVE' && currentRole === 'USER'">
                         <div class="box">
                             <button class="btn btn-warning" type="button">
                                 SELECT

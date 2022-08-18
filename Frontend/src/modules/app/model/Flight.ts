@@ -9,4 +9,7 @@ export interface Flight{
 	EconomyClassPrice : number
 	BusinessClassPrice : number
 	FirstClassPrice : number
+	EconomyClassRemainingSeats : number
+	BusinessClassRemainingSeats : number
+	FirstClassRemainingSeats : number
 }

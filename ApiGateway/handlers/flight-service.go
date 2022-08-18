@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/my-flights/ApiGateway/utils"
 )
 
@@ -46,6 +47,58 @@ func SearchFlights(w http.ResponseWriter, r *http.Request) {
 		utils.BaseFlightService.Next().Host + FlightsServiceApi + "/search-all-flights?flyingFrom=" +
 			flyingFrom + "&flyingTo=" + flyingTo + "&departing=" + departing + "&passengerNumber=" + passengerNumber +
 			"&travelClass=" + travelClass)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	utils.DelegateResponse(response, w)
+}
+
+func CancelFlight(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	utils.SetupResponse(&w, r)
+
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	params := mux.Vars(r)
+	flightNumber, _ := params["flightNumber"]
+
+	req, _ := http.NewRequest(http.MethodPost,
+		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/cancel/"+flightNumber, r.Body)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	utils.DelegateResponse(response, w)
+}
+
+func CreateFlight(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	req, _ := http.NewRequest(http.MethodPost,
+		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/create", r.Body)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(req)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)

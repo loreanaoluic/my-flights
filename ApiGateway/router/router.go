@@ -29,6 +29,8 @@ func HandleRequests() {
 	// Flight Service
 	router.HandleFunc("/api/flights/get-all-flights", handlers.FindAllFlights).Methods(http.MethodGet)
 	router.HandleFunc("/api/flights/search-all-flights", handlers.SearchFlights).Methods(http.MethodGet)
+	router.HandleFunc("/api/flights/cancel/{flightNumber}", handlers.CancelFlight).Methods(http.MethodPost)
+	router.HandleFunc("/api/flights/create", handlers.CreateFlight).Methods(http.MethodPost)
 
 	// Airline Service
 	router.HandleFunc("/api/airlines/get-all-airlines", handlers.FindAllAirlines).Methods(http.MethodGet)

@@ -41,7 +41,15 @@ export class LoginComponent {
             const info = jwt.decodeToken(tokenString);
             const role = info.role;
 
-            if(role === "ADMIN") this.router.navigate(["guest/search-flights"]);
+            if(role === "ADMIN") this.router.navigate(["admin/all-flights"],
+            { queryParams: { 
+                flyingFrom: '', 
+                flyingTo: '', 
+                departing: '', 
+                passengerNumber: '', 
+                travelClass: 1
+              },
+            },);
             if(role === "USER") this.router.navigate(["guest/search-flights"]);
           }
         },

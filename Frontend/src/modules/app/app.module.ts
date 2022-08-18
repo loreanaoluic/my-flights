@@ -5,8 +5,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { AdminModule } from '../admin/admin.module';
-import { UserModule } from '../user/user.module';
 import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './components/login/login.component';
 import { NavbarUserComponent } from './components/navbar-user/navbar-user.component';
@@ -16,6 +14,11 @@ import { AuthService } from './services/auth.service';
 import { HomeComponent } from './pages/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MyProfileComponent } from './components/my-profile/my-profile.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AdminModule } from '../admin/admin.module';
+import { GuestModule } from '../guest/guest.module';
+import { UserModule } from '../user/user.module';
 
 @NgModule({
   declarations: [
@@ -29,10 +32,13 @@ import { MyProfileComponent } from './components/my-profile/my-profile.component
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AdminModule,
-    UserModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
+    OverlayModule,
+    AdminModule, 
+    GuestModule, 
+    UserModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
     })

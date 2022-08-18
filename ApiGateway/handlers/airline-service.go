@@ -14,7 +14,7 @@ func FindAllAirlines(w http.ResponseWriter, r *http.Request) {
 	utils.SetupResponse(&w, r)
 
 	response, err := http.Get(
-		utils.BaseAirlineService.Next().Host + FlightsServiceApi + "/get-all-airlines")
+		utils.BaseAirlineService.Next().Host + AirlinesServiceApi + "/get-all-airlines")
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)

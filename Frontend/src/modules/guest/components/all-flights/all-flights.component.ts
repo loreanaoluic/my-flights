@@ -5,13 +5,18 @@ import { GuestService } from '../../services/guest.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { AdminService } from 'src/modules/admin/services/admin.service';
+import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { NewFlightModalComponent } from '../../modals/new-flight-modal/new-flight-modal.component';
 
 @Component({
   selector: 'app-all-flights',
   templateUrl: './all-flights.component.html',
-  styleUrls: ['./all-flights.component.scss']
+  styleUrls: ['./all-flights.component.scss'],
+  providers: [MdbModalService]
 })
 export class AllFlightsComponent implements OnInit {
+  modalRef: MdbModalRef<NewFlightModalComponent>
   flights: Flight[] = [];
   currentRole : any
   travelClasses: any[] = [
@@ -31,7 +36,9 @@ export class AllFlightsComponent implements OnInit {
     private guestService: GuestService,
     private authService : AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: MdbModalService,
+    private adminService: AdminService
   ) { }
 
   ngOnInit(): void {
@@ -105,6 +112,15 @@ export class AllFlightsComponent implements OnInit {
         },
       },
     );
+  }
+
+  openNewFlightModal() {
+    this.modalRef = this.modalService.open(NewFlightModalComponent);
+  }
+
+  cancelFlight(flightNumber: string) {
+    this.adminService.cancelFlight(flightNumber);
+    window.location.reload();
   }
 
 }
