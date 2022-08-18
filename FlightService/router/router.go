@@ -15,7 +15,7 @@ func HandleRequests(handler *handlers.FlightsHandler) {
 	router.HandleFunc("/api/flights/get-all-flights", handler.FindAllFlights).Methods(http.MethodGet)
 	router.HandleFunc("/api/flights/search-all-flights", handler.SearchFlights).Methods(http.MethodGet)
 	router.HandleFunc("/api/flights/create", handler.CreateFlight).Methods(http.MethodPost)
-	router.HandleFunc("/api/flights/cancel/{flightNumber}", handler.CancelFlight).Methods(http.MethodPost)
+	router.HandleFunc("/api/flights/cancel/{id}", handler.CancelFlight).Methods(http.MethodPost)
 
 	log.Fatal(http.ListenAndServe(":8082", router))
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { Airline } from 'src/modules/app/model/Airline';
-import { Flight } from 'src/modules/app/model/Flight';
+import { NewFlight } from 'src/modules/app/model/NewFlight';
 import { AdminService } from 'src/modules/admin/services/admin.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -51,7 +51,7 @@ export class NewFlightModalComponent implements OnInit {
       var fullArrivalDate: string = (<HTMLInputElement>document.getElementById("dateOfArrival")).value + " " +
       (<HTMLInputElement>document.getElementById("timeOfArrival")).value;
     
-      const flight: Flight = {
+      const flight: NewFlight = {
         FlightNumber: (<HTMLInputElement>document.getElementById("flightNumber")).value,
         PlaceOfDeparture: (<HTMLInputElement>document.getElementById("placeOfDeparture")).value,
         PlaceOfArrival: (<HTMLInputElement>document.getElementById("placeOfArrival")).value,

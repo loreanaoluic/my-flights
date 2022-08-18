@@ -1,6 +1,7 @@
 package model
 
 type FlightDTO struct {
+	Id                          uint    `json:"Id"`
 	FlightNumber                string  `gorm:"not null;unique"`
 	PlaceOfDeparture            string  `gorm:"not null"`
 	PlaceOfArrival              string  `gorm:"not null"`

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/my-flights/ApiGateway/utils"
@@ -66,10 +67,10 @@ func CancelFlight(w http.ResponseWriter, r *http.Request) {
 	}
 
 	params := mux.Vars(r)
-	flightNumber, _ := params["flightNumber"]
+	id, _ := strconv.ParseUint(params["id"], 10, 32)
 
 	req, _ := http.NewRequest(http.MethodPost,
-		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/cancel/"+flightNumber, r.Body)
+		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/cancel/"+strconv.FormatUint(uint64(id), 10), r.Body)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
 

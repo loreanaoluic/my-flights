@@ -3,7 +3,7 @@
         <div class="container">
             <div  *ngIf="currentRole === 'ADMIN'">
                 <br><br>
-                <button class="btn btn-success" type="button" (click)="openNewFlightModal()" 
+                <button class="btn btn-secondary" type="button" (click)="openNewFlightModal()" 
                 data-toggle="modal" data-backdrop="static" data-keyboard="false"
                 > ADD NEW FLIGHT</button>
                 <br><br>
@@ -126,7 +126,7 @@
                 <section class="strap">
                     <div class="active" *ngIf="flight.FlightStatus !== 'CANCELED' && currentRole === 'ADMIN'">
                         <div class="box">
-                            <button class="btn btn-danger" type="button" style="width: 160px;" (click)="cancelFlight(flight.FlightNumber)">
+                            <button class="btn btn-danger" type="button" style="width: 160px;" (click)="cancelFlight(flight.Id)">
                                 CANCEL FLIGHT
                             </button>
                         </div>

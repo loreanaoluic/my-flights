@@ -35,19 +35,11 @@ var airlines = []model.Airline{
 	},
 	{
 		Model: gorm.Model{},
-		Name:  "Air Canada",
-	},
-	{
-		Model: gorm.Model{},
 		Name:  "British Airways",
 	},
 	{
 		Model: gorm.Model{},
 		Name:  "Singapore Airlines",
-	},
-	{
-		Model: gorm.Model{},
-		Name:  "Finnair",
 	},
 }
 

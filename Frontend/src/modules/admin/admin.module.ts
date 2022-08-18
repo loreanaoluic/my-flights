@@ -6,12 +6,20 @@ import { AllUsersPageComponent } from './pages/all-users-page/all-users-page.com
 import { RouterModule } from '@angular/router';
 import { AdminRoutes } from './admin.routes';
 import { GuestModule } from '../guest/guest.module';
+import { AllAirlinesComponent } from './components/all-airlines/all-airlines.component';
+import { AllUsersComponent } from './components/all-users/all-users.component';
+import { NewAirlineModalComponent } from './modals/new-airline-modal/new-airline-modal.component';
+import { UpdateAirlineModalComponent } from './modals/update-airline-modal/update-airline-modal.component';
 
 @NgModule({
   declarations: [
     AllFlightsPageComponent,
     AllAirlinesPageComponent,
     AllUsersPageComponent,
+    AllAirlinesComponent,
+    AllUsersComponent,
+    NewAirlineModalComponent,
+    UpdateAirlineModalComponent,
   ],
   imports: [
     GuestModule,

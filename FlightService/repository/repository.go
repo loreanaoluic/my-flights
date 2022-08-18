@@ -173,9 +173,9 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 	return flightsDTO, totalElements, nil
 }
 
-func (repo *Repository) CancelFlight(flightNumber string) (*model.FlightDTO, error) {
+func (repo *Repository) CancelFlight(id uint) (*model.FlightDTO, error) {
 	var flight model.Flight
-	result := repo.db.Table("flights").Where("flight_number = ?", flightNumber).First(&flight)
+	result := repo.db.Table("flights").Where("id = ?", id).First(&flight)
 
 	if result.Error != nil {
 		return nil, errors.New("Flight not found!")

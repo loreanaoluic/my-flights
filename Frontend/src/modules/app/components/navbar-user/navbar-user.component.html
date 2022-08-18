@@ -12,7 +12,7 @@
               <a class="nav-link" href="user/my-tickets">MY TICKETS</a>
             </li>
             <li class="nav-item" *ngIf="currentRole === 'ADMIN'">
-              <a class="nav-link" href="admin/all-flights">ALL FLIGHTS</a>
+              <button class="nav-link" type="submit" (click)="navigateAllFlights()">ALL FLIGHTS</button>
             </li>
             <li class="nav-item" *ngIf="currentRole === 'ADMIN'">
               <a class="nav-link" href="admin/all-airlines">ALL AIRLINES</a>

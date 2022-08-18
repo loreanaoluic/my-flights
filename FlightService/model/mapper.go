@@ -1,8 +1,11 @@
 package model
 
+import "gorm.io/gorm"
+
 func (flight *Flight) ToFlightDTO() FlightDTO {
 
 	return FlightDTO{
+		Id:                          flight.ID,
 		FlightNumber:                flight.FlightNumber,
 		PlaceOfDeparture:            flight.PlaceOfDeparture,
 		PlaceOfArrival:              flight.PlaceOfArrival,
@@ -22,6 +25,7 @@ func (flight *Flight) ToFlightDTO() FlightDTO {
 func (flightDTO *FlightDTO) ToFlight() Flight {
 
 	return Flight{
+		Model:                       gorm.Model{},
 		FlightNumber:                flightDTO.FlightNumber,
 		PlaceOfDeparture:            flightDTO.PlaceOfDeparture,
 		PlaceOfArrival:              flightDTO.PlaceOfArrival,

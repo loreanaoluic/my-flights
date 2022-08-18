@@ -1,0 +1,35 @@
+<div class="container">
+    <button type="button" name="newEmployeeBtn" class="btn btn-secondary" (click)="openNewAirlineModal()">
+      Add new airline company
+    </button>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="table" *ngFor="let airline of airlines">
+          <td>{{ airline.Name }}</td>
+          <td>
+            <button type="button" class="btn btn-secondary" (click)="openAirlineReviewsModal(airline)">
+                Reviews
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-primary" (click)="openEditAirlineModal(airline)">
+                Edit
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger" (click)="deleteAirline(airline.ID)">
+                Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

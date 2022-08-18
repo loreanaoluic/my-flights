@@ -29,11 +29,14 @@ func HandleRequests() {
 	// Flight Service
 	router.HandleFunc("/api/flights/get-all-flights", handlers.FindAllFlights).Methods(http.MethodGet)
 	router.HandleFunc("/api/flights/search-all-flights", handlers.SearchFlights).Methods(http.MethodGet)
-	router.HandleFunc("/api/flights/cancel/{flightNumber}", handlers.CancelFlight).Methods(http.MethodPost)
+	router.HandleFunc("/api/flights/cancel/{id}", handlers.CancelFlight).Methods(http.MethodPost)
 	router.HandleFunc("/api/flights/create", handlers.CreateFlight).Methods(http.MethodPost)
 
 	// Airline Service
 	router.HandleFunc("/api/airlines/get-all-airlines", handlers.FindAllAirlines).Methods(http.MethodGet)
+	router.HandleFunc("/api/airlines/create", handlers.CreateAirline).Methods(http.MethodPost)
+	router.HandleFunc("/api/airlines/update", handlers.UpdateAirline).Methods(http.MethodPut)
+	router.HandleFunc("/api/airlines/delete/{id}", handlers.DeleteAirline).Methods(http.MethodDelete)
 
 	log.Fatal(http.ListenAndServe(":8080", corsHandler.Handler(router)))
 }

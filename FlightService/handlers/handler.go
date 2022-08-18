@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/my-flights/FlightService/model"
 	"github.com/my-flights/FlightService/repository"
@@ -44,9 +45,10 @@ func (rh *FlightsHandler) CancelFlight(w http.ResponseWriter, r *http.Request) {
 	AdjustResponseHeaderJson(&w)
 
 	params := mux.Vars(r)
-	flightNumber := params["flightNumber"]
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
 
-	flightDTO, err := rh.repository.CancelFlight(flightNumber)
+	flightDTO, err := rh.repository.CancelFlight(uint(id))
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

@@ -118,8 +118,8 @@ export class AllFlightsComponent implements OnInit {
     this.modalRef = this.modalService.open(NewFlightModalComponent);
   }
 
-  cancelFlight(flightNumber: string) {
-    this.adminService.cancelFlight(flightNumber);
+  cancelFlight(id: number) {
+    this.adminService.cancelFlight(id);
     window.location.reload();
   }
 

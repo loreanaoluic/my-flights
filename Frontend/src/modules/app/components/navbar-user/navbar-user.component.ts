@@ -33,4 +33,16 @@ export class NavbarUserComponent implements OnInit {
   signIn() {
     this.router.navigate(["login"]);
   }
+
+  navigateAllFlights() {
+    this.router.navigate(["admin/all-flights"],
+            { queryParams: { 
+                flyingFrom: '', 
+                flyingTo: '', 
+                departing: '', 
+                passengerNumber: '', 
+                travelClass: 1
+              },
+            },);
+  }
 }

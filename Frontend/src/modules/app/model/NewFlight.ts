@@ -1,5 +1,4 @@
-export interface Flight{
-    Id: number
+export interface NewFlight{
     FlightNumber : string
     PlaceOfDeparture : string
 	PlaceOfArrival : string
