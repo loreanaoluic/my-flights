@@ -14,6 +14,8 @@ import { BaseLayoutComponent } from './pages/base-layout/base-layout.component';
 import { InterceptorInterceptor } from './interceptors/interceptor.interceptor';
 import { AuthService } from './services/auth.service';
 import { HomeComponent } from './pages/home/home.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MyProfileComponent } from './components/my-profile/my-profile.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { HomeComponent } from './pages/home/home.component';
     LoginComponent,
     NavbarUserComponent,
     BaseLayoutComponent,
-    HomeComponent
+    HomeComponent,
+    MyProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +32,7 @@ import { HomeComponent } from './pages/home/home.component';
     AdminModule,
     UserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
     })

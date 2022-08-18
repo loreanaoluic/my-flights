@@ -12,14 +12,20 @@ var users = []model.User{
 	{
 		Model:        gorm.Model{},
 		Username:     "admin",
-		Password:     "admin",
+		Password:     "$2a$04$tDyeJl6XBVIxVyMjw6Zau.l1TYP0kZBmpbszswGpJ0j.ScpI4sQ6y",
 		EmailAddress: "admin@gmail.com",
+		FirstName:    "Milica",
+		LastName:     "Markovic",
+		Role:         model.UserRole("ADMIN"),
 	},
 	{
 		Model:        gorm.Model{},
 		Username:     "user",
-		Password:     "user",
+		Password:     "$2a$04$CU2TcqokLsIDWIBdOFVN7eoYLUBifthvZhurESow757FeFqpO8FRC",
 		EmailAddress: "user@gmail.com",
+		FirstName:    "Nikola",
+		LastName:     "Nikolic",
+		Role:         model.UserRole("USER"),
 	},
 }
 

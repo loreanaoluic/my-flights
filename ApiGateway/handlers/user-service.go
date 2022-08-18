@@ -9,6 +9,7 @@ import (
 const UsersServiceApi string = "/api/users"
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
 		return
@@ -28,6 +29,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
 		return

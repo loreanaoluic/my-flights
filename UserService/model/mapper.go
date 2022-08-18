@@ -6,6 +6,8 @@ func (user *User) ToRegisterDTO() RegisterDTO {
 		Username:     user.Username,
 		Password:     user.Password,
 		EmailAddress: user.EmailAddress,
+		FirstName:    user.FirstName,
+		LastName:     user.LastName,
 	}
 }
 
@@ -15,5 +17,7 @@ func (registerDTO *RegisterDTO) ToUser() User {
 		Username:     registerDTO.Username,
 		Password:     registerDTO.Password,
 		EmailAddress: registerDTO.EmailAddress,
+		FirstName:    registerDTO.FirstName,
+		LastName:     registerDTO.LastName,
 	}
 }

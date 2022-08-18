@@ -20,28 +20,10 @@ export class AuthService {
   ) {}
 
   login(auth: Login): Observable<string> {
-    return this.http.post<string>("backend/api/auth/login", auth, {
+    return this.http.post<string>("http://localhost:8080/api/users/login", auth, {
       headers: this.headers,
       responseType: "json",
     });
-  }
-
-  setCurrentUser(token: Token): void {
-
-    this.http.get<User>("backend/api/auth/getLoggedIn", {
-      headers: this.headers,
-      responseType: "json",
-    }).subscribe(response => {
-      localStorage.setItem("currentUser", JSON.stringify(response));
-    });
-  }
-
-  getCurrentUser(): User | null{
-
-    const jsonString = localStorage.getItem("currentUser");
-
-    if(jsonString) return JSON.parse(jsonString);
-    else return null;
   }
 
   logout(): Observable<string> {

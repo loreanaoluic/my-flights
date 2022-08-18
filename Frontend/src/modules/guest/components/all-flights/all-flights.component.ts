@@ -4,6 +4,7 @@ import { AuthService } from 'src/modules/app/services/auth.service';
 import { GuestService } from '../../services/guest.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Component({
   selector: 'app-all-flights',
@@ -34,7 +35,12 @@ export class AllFlightsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.currentRole = this.authService.getCurrentUser()?.dtype;
+    const tokenString = localStorage.getItem('userToken');
+    if (tokenString) {
+      const jwt: JwtHelperService = new JwtHelperService();
+      const info = jwt.decodeToken(tokenString);
+      this.currentRole = info.role;
+    }
     
     // this.guestService.getAllFlights().subscribe((response) => {
     //   this.flights = response;

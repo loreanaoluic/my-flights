@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
-import { LoginGuard } from './guards/login.guard';
+import { RoleGuard } from './guards/role.guard';
 import { BaseLayoutComponent } from './pages/base-layout/base-layout.component';
 import { HomeComponent } from './pages/home/home.component';
+import { MyProfileComponent } from './components/my-profile/my-profile.component';
 
 const routes: Routes = [
   {
@@ -17,7 +18,6 @@ const routes: Routes = [
   {
     path:"",
     component: BaseLayoutComponent,
-    //canActivate: [LoginGuard],
     children:[
       {
         path: "admin",
@@ -33,7 +33,13 @@ const routes: Routes = [
         path: "guest",
         loadChildren: () =>
           import("../guest/guest.module").then((u) => u.GuestModule),
-      }
+      },
+      {
+        path: "profile",
+        component: MyProfileComponent,
+        canActivate: [RoleGuard],
+        data: { expectedRoles: "ADMIN|USER" },
+      },
     ]
   }
 ];
