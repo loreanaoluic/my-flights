@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"> Edit profile </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modalRef.close()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form class="card-form">
+      <div class="input">
+          <input type="text" class="input-field" id="firstName" value="{{ user.FirstName }}" required/>
+        <label class="input-label">First name</label>
+      </div>
+      <div class="input">
+        <input type="text" class="input-field" id="lastName" value="{{ user.LastName }}" required/>
+      <label class="input-label">First name</label>
+    </div>
+    <div class="input">
+        <input type="text" class="input-field" id="emailAddress" value="{{ user.EmailAddress }}" required/>
+      <label class="input-label">Email address</label>
+    </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
+      Close
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="update()">Update</button>
+  </div>

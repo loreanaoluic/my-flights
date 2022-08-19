@@ -8,6 +8,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { AdminService } from 'src/modules/admin/services/admin.service';
 import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { NewFlightModalComponent } from '../../modals/new-flight-modal/new-flight-modal.component';
+import { UpdateFlightModalComponent } from '../../modals/update-flight-modal/update-flight-modal.component';
 
 @Component({
   selector: 'app-all-flights',
@@ -121,6 +122,11 @@ export class AllFlightsComponent implements OnInit {
   cancelFlight(id: number) {
     this.adminService.cancelFlight(id);
     window.location.reload();
+  }
+
+  openUpdateFlightModal(flight: Flight) {
+    this.modalRef = this.modalService.open(UpdateFlightModalComponent, { data: { flight: flight }
+    });
   }
 
 }

@@ -1,0 +1,79 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"> Update flight</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modalRef.close()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form class="card-form">
+      <div class="input">
+          <input type="text" class="input-field" id="flightNumber" value="{{flight.FlightNumber}}" required/>
+        <label class="input-label">Flight number</label>
+      </div>
+      <div class="input">
+          <input type="text" class="input-field" id="placeOfDeparture" value="{{flight.PlaceOfDeparture}}" required>
+        <label class="input-label">Place of departure</label>
+      </div>
+      <div class="input">
+        <input type="text" class="input-field" id="placeOfArrival" value="{{flight.PlaceOfArrival}}" required>
+      <label class="input-label">Place of arrival</label>
+      </div>
+      <div class="input">
+        <input type="date" class="input-field" id="dateOfDeparture" value="{{flight.DateOfDeparture}}" required>
+      <label class="input-label">Date of departure</label>
+      </div>
+      <div class="input">
+        <input type="time" class="input-field" id="timeOfDeparture" value="{{flight.TimeOfDeparture}}" required>
+      <label class="input-label">Time of departure</label>
+      </div>
+      <div class="input">
+        <input type="date" class="input-field" id="dateOfArrival" value="{{flight.DateOfArrival}}" required>
+      <label class="input-label">Date of arrival</label>
+      </div>
+      <div class="input">
+        <input type="time" class="input-field" id="timeOfArrival" value="{{flight.TimeOfArrival}}" required>
+      <label class="input-label">Time of arrival</label>
+      </div>
+      <div class="input">
+        <select [(ngModel)]="selectedAirline" name="first" class="input-field">
+          <option *ngFor="let airline of airlines">
+            {{airline.Name}}
+          </option>
+        </select>
+      <label class="input-label">Airline</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="economyClassPrice" value="{{flight.EconomyClassPrice}}" required>
+      <label class="input-label">Economy class price</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="businessClassPrice" value="{{flight.BusinessClassPrice}}" required>
+      <label class="input-label">Business class price</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="firstClassPrice" value="{{flight.FirstClassPrice}}">
+      <label class="input-label">First class price</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="economyClassRemainingSeats" value="{{flight.EconomyClassRemainingSeats}}" required>
+      <label class="input-label">Economy class remaining seats</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="businessClassRemainingSeats" value="{{flight.BusinessClassRemainingSeats}}" required>
+      <label class="input-label">Business class remaining seats</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="firstClassRemainingSeats" value="{{flight.FirstClassRemainingSeats}}">
+      <label class="input-label">First class remaining seats</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
+      Close
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="createNew()">Submit</button>
+  </div>

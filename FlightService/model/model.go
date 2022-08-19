@@ -9,6 +9,8 @@ type Flight struct {
 	FlightNumber                string       `gorm:"not null;unique"`
 	PlaceOfDeparture            string       `gorm:"not null"`
 	PlaceOfArrival              string       `gorm:"not null"`
+	DateOfDeparture             string       `gorm:"not null"`
+	DateOfArrival               string       `gorm:"not null"`
 	TimeOfDeparture             string       `gorm:"not null"`
 	TimeOfArrival               string       `gorm:"not null"`
 	AirlineName                 string       `gorm:"not null"`

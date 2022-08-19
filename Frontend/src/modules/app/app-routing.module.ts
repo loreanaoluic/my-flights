@@ -35,7 +35,7 @@ const routes: Routes = [
           import("../guest/guest.module").then((u) => u.GuestModule),
       },
       {
-        path: "profile",
+        path: "my-profile",
         component: MyProfileComponent,
         canActivate: [RoleGuard],
         data: { expectedRoles: "ADMIN|USER" },

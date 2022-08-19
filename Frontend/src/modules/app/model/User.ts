@@ -1,10 +1,13 @@
 export interface User{
-    dtype : string,
-    name : string,
-    lastName : string, 
-    emailAddress : string,
-    username : string,
-    password : string,
-    salary : number,
-    deleted : boolean
+    ID: number;
+    Username : string;
+	Password : string;
+	EmailAddress : string;
+	FirstName : string;
+	LastName : string;
+	Role : string;
+	Banned : boolean;
+	Deactivated : boolean;
+	Reports : number;
+	Points : number;
 }

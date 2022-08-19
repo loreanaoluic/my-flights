@@ -6,6 +6,7 @@ import { NewAirline } from 'src/modules/app/model/NewAirline';
 import { NewFlight } from 'src/modules/app/model/NewFlight';
 import { Airline } from 'src/modules/app/model/Airline';
 import { Flight } from 'src/modules/app/model/Flight';
+import { User } from 'src/modules/app/model/User';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,40 @@ export class AdminService {
       responseType: "json",
     }).subscribe(() => {
       this.toastr.success("Airline company deleted!");
+    });
+  }
+
+  getAllUsers(): Observable<User[]>{
+    return this.http.get<User[]>("http://localhost:8080/api/users/get-all-users", {
+      headers: this.headers,
+      responseType: "json",
+    });
+  }
+
+  banUser(id: number): void{
+    this.http.post<User>("http://localhost:8080/api/users/ban/" + id, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.success("User banned!");
+    });
+  }
+
+  unbanUser(id: number): void{
+    this.http.post<User>("http://localhost:8080/api/users/unban/" + id, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.success("User unbanned!");
+    });
+  }
+
+  updateFlight(flight: Flight): void{
+    this.http.put<Flight>("http://localhost:8080/api/flights/update", flight, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.success("Flight updated!");
     });
   }
 }

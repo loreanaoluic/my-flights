@@ -112,3 +112,29 @@ func CreateFlight(w http.ResponseWriter, r *http.Request) {
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
+
+func UpdateFlight(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	utils.SetupResponse(&w, r)
+
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	req, _ := http.NewRequest(http.MethodPut,
+		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/update", r.Body)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	utils.DelegateResponse(response, w)
+}

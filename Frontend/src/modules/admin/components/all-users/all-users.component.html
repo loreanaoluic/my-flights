@@ -1,1 +1,46 @@
-<p>all-users works!</p>
+<div class="container">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email address</th>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Role</th>
+          <th>Account</th>
+          <th>Reports</th>
+          <th>Points</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="table" *ngFor="let user of users">
+          <td>{{ user.Username }}</td>
+          <td>{{ user.EmailAddress }}</td>
+          <td>{{ user.FirstName }}</td>
+          <td>{{ user.LastName }}</td>
+          <td>{{ user.Role }}</td>
+          <td>
+            <div *ngIf="user.Deactivated == true" style="color: red;" >Deactivated</div>
+            <div *ngIf="user.Deactivated == false" style="color: green;">Activated</div>
+          </td>
+          <td>
+            <div *ngIf="user.Role == 'USER'"> {{ user.Reports }}</div>
+          </td>
+          <td>
+            <div *ngIf="user.Role == 'USER'"> {{ user.Points }}</div>
+          </td>
+          <td>
+            <div *ngIf="user.Role == 'USER'">
+              <button type="button" class="btn btn-danger" *ngIf="user.Banned == true" (click)="unbanUser(user.ID)">
+                  UNBAN
+              </button>
+              <button type="button" class="btn btn-danger" *ngIf="user.Banned == false" (click)="banUser(user.ID)">
+                BAN
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

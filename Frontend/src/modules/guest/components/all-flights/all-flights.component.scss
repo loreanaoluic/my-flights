@@ -27,7 +27,7 @@ Boarding Pass
   @include center;
   margin-left: 482px;
   width: 1240px;
-  height: 270px;
+  height: 280px;
   background: #fff;
   border-radius: 12px;
   margin-top: 200px;
@@ -208,6 +208,7 @@ Boarding Pass
     clear: both;
     position: relative;
     border-top: 1px solid #99D298;
+    height: 80px;
 
     &::after {
       content: '';

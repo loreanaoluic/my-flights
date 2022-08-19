@@ -20,9 +20,12 @@
             <li class="nav-item" *ngIf="currentRole === 'ADMIN'">
               <a class="nav-link" href="admin/all-users">ALL USERS</a>
             </li>
-            <li class="nav-item" *ngIf="currentRole !== undefined" style="margin-left: 740px;">
-              <a class="nav-link" href="guest/search-flights">MY PROFILE</a>
-          </li>
+            <li class="nav-item" *ngIf="currentRole === 'ADMIN'" style="margin-left: 740px;">
+              <a class="nav-link" href="my-profile">MY PROFILE</a>
+            </li>
+            <li class="nav-item" *ngIf="currentRole === 'USER'" style="margin-left: 840px;">
+              <a class="nav-link" href="my-profile">MY PROFILE</a>
+            </li>
         </ul>
         <form class="d-flex">
           <button class="btn btn-outline-dark" style="font-family: 'Bebas Neue'; font-size: 20px;" type="submit" 

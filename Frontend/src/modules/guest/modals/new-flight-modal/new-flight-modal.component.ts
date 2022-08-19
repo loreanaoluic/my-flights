@@ -44,19 +44,14 @@ export class NewFlightModalComponent implements OnInit {
       this.toastrService.error("Please fill in all fields!");
 
     } else {
-
-      var fullDepartureDate: string = (<HTMLInputElement>document.getElementById("dateOfDeparture")).value + " " +
-      (<HTMLInputElement>document.getElementById("timeOfDeparture")).value;
-
-      var fullArrivalDate: string = (<HTMLInputElement>document.getElementById("dateOfArrival")).value + " " +
-      (<HTMLInputElement>document.getElementById("timeOfArrival")).value;
-    
       const flight: NewFlight = {
         FlightNumber: (<HTMLInputElement>document.getElementById("flightNumber")).value,
         PlaceOfDeparture: (<HTMLInputElement>document.getElementById("placeOfDeparture")).value,
         PlaceOfArrival: (<HTMLInputElement>document.getElementById("placeOfArrival")).value,
-        TimeOfDeparture: fullDepartureDate,
-        TimeOfArrival: fullArrivalDate,
+        DateOfDeparture: (<HTMLInputElement>document.getElementById("dateOfDeparture")).value,
+        DateOfArrival: (<HTMLInputElement>document.getElementById("dateOfArrival")).value,
+        TimeOfDeparture: (<HTMLInputElement>document.getElementById("timeOfDeparture")).value,
+        TimeOfArrival: (<HTMLInputElement>document.getElementById("timeOfArrival")).value,
         Airline: this.selectedAirline,
         FlightStatus : "ACTIVE",
         EconomyClassPrice: Number((<HTMLInputElement>document.getElementById("economyClassPrice")).value),

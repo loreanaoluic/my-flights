@@ -75,3 +75,20 @@ func (rh *FlightsHandler) CreateFlight(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(*flightDTO)
 }
+
+func (rh *FlightsHandler) UpdateFlight(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	var updatedFlightDTO model.FlightDTO
+	json.NewDecoder(r.Body).Decode(&updatedFlightDTO)
+
+	flightDTO, err := rh.repository.UpdateFlight(&updatedFlightDTO)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*flightDTO)
+}

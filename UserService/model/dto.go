@@ -10,6 +10,20 @@ type RegisterDTO struct {
 	LastName     string `gorm:"not null"`
 }
 
+type UserDTO struct {
+	Id           uint   `json:"Id"`
+	Username     string `gorm:"not null;unique"`
+	Password     string `gorm:"not null"`
+	EmailAddress string `gorm:"not null"`
+	FirstName    string `gorm:"not null"`
+	LastName     string `gorm:"not null"`
+	Role         UserRole
+	Banned       bool
+	Deactivated  bool
+	Reports      uint
+	Points       uint
+}
+
 type Login struct {
 	Username string `json:"Username"`
 	Password string `json:"Password"`

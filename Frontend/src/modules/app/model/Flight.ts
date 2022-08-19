@@ -3,6 +3,8 @@ export interface Flight{
     FlightNumber : string
     PlaceOfDeparture : string
 	PlaceOfArrival : string
+	DateOfDeparture : string
+	DateOfArrival : string
 	TimeOfDeparture : string
 	TimeOfArrival : string
 	Airline : number

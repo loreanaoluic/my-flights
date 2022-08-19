@@ -3,10 +3,12 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
 
 	"github.com/my-flights/UserService/model"
 	"github.com/my-flights/UserService/repository"
@@ -45,7 +47,7 @@ func (uh *UsersHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	expirationTime := time.Now().Add(time.Hour * 24)
-	claims := model.Claims{EmailAddress: user.EmailAddress, Role: user.Role, Id: user.ID, StandardClaims: jwt.StandardClaims{ExpiresAt: expirationTime.Unix()}}
+	claims := model.Claims{EmailAddress: user.EmailAddress, Username: user.Username, Role: user.Role, Id: user.ID, StandardClaims: jwt.StandardClaims{ExpiresAt: expirationTime.Unix()}}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	tokenString, _ := token.SignedString(jwtKey)
@@ -111,4 +113,119 @@ func (uh *UsersHandler) AuthorizeUser(w http.ResponseWriter, r *http.Request) {
 	if token.Claims.(*model.Claims).Role != model.USER {
 		w.WriteHeader(http.StatusUnauthorized)
 	}
+}
+
+func (rh *UsersHandler) FindAllUsers(w http.ResponseWriter, r *http.Request) {
+
+	AdjustResponseHeaderJson(&w)
+
+	airlines, _, _ := rh.repository.FindAllUsers(r)
+
+	json.NewEncoder(w).Encode(airlines)
+}
+
+func (rh *UsersHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	var updatedUserDTO model.UserDTO
+	json.NewDecoder(r.Body).Decode(&updatedUserDTO)
+
+	userDTO, err := rh.repository.UpdateUser(&updatedUserDTO)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
+	} else {
+		json.NewEncoder(w).Encode(*userDTO)
+	}
+}
+
+func (rh *UsersHandler) FindUserById(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	userDTO, err := rh.repository.FindUserById(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
+}
+
+func (rh *UsersHandler) ActivateAccount(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	userDTO, err := rh.repository.ActivateAccount(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
+}
+
+func (rh *UsersHandler) DeactivateAccount(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	userDTO, err := rh.repository.DeactivateAccount(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
+}
+
+func (rh *UsersHandler) BanUser(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	userDTO, err := rh.repository.BanUser(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
+}
+
+func (rh *UsersHandler) UnbanUser(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	userDTO, err := rh.repository.UnbanUser(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
 }

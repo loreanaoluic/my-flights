@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AdminModule } from '../admin/admin.module';
 import { GuestModule } from '../guest/guest.module';
 import { UserModule } from '../user/user.module';
+import { EditUserModalComponent } from './modals/edit-user-modal/edit-user-modal.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { UserModule } from '../user/user.module';
     NavbarUserComponent,
     BaseLayoutComponent,
     HomeComponent,
-    MyProfileComponent
+    MyProfileComponent,
+    EditUserModalComponent
   ],
   imports: [
     BrowserModule,

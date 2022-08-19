@@ -77,7 +77,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
-				"('' = ? or lower(time_of_departure) LIKE ?) and "+
+				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(economy_class_remaining_seats >= ?)",
 				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
 				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
@@ -90,7 +90,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
-				"('' = ? or lower(time_of_departure) LIKE ?) and "+
+				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(economy_class_remaining_seats >= ?)",
 				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
 				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
@@ -108,7 +108,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
-				"('' = ? or lower(time_of_departure) LIKE ?) and "+
+				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(business_class_remaining_seats >= ?)",
 				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
 				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
@@ -121,7 +121,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
-				"('' = ? or lower(time_of_departure) LIKE ?) and "+
+				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(business_class_remaining_seats >= ?)",
 				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
 				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
@@ -139,7 +139,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
-				"('' = ? or lower(time_of_departure) LIKE ?) and "+
+				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(first_class_remaining_seats >= ?)",
 				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
 				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
@@ -152,7 +152,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
-				"('' = ? or lower(time_of_departure) LIKE ?) and "+
+				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(first_class_remaining_seats >= ?)",
 				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
 				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
@@ -199,6 +199,40 @@ func (repo *Repository) CreateFlight(flightDTO *model.FlightDTO) (*model.FlightD
 
 	if result.Error != nil {
 		return nil, errors.New("Flight cannot be created!")
+	}
+
+	var retValue model.FlightDTO = flight.ToFlightDTO()
+	return &retValue, nil
+}
+
+func (repo *Repository) UpdateFlight(flightDTO *model.FlightDTO) (*model.FlightDTO, error) {
+	var flight model.Flight
+	result := repo.db.Table("flights").Where("ID = ?", flightDTO.Id).First(&flight)
+
+	if result.Error != nil {
+		return nil, errors.New("Flight cannot be found!")
+	}
+
+	flight.FlightNumber = flightDTO.FlightNumber
+	flight.PlaceOfDeparture = flightDTO.PlaceOfDeparture
+	flight.PlaceOfArrival = flightDTO.PlaceOfArrival
+	flight.DateOfDeparture = flightDTO.DateOfDeparture
+	flight.DateOfArrival = flightDTO.DateOfArrival
+	flight.TimeOfDeparture = flightDTO.TimeOfDeparture
+	flight.TimeOfArrival = flightDTO.TimeOfArrival
+	flight.AirlineName = flightDTO.Airline
+	flight.FlightStatus = model.FlightStatus(flightDTO.FlightStatus)
+	flight.EconomyClassPrice = flightDTO.EconomyClassPrice
+	flight.BusinessClassPrice = flightDTO.BusinessClassPrice
+	flight.FirstClassPrice = flightDTO.FirstClassPrice
+	flight.EconomyClassRemainingSeats = flightDTO.EconomyClassRemainingSeats
+	flight.BusinessClassRemainingSeats = flightDTO.BusinessClassRemainingSeats
+	flight.FirstClassRemainingSeats = flightDTO.FirstClassRemainingSeats
+
+	result2 := repo.db.Table("flights").Save(&flight)
+
+	if result2.Error != nil {
+		return nil, errors.New("Flight cannot be updated!")
 	}
 
 	var retValue model.FlightDTO = flight.ToFlightDTO()
