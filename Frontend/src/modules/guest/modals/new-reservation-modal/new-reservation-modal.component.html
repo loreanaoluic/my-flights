@@ -10,13 +10,13 @@
   <div class="modal-body">
     <form class="card-form">
       <div class="input">
-        <label class="input-label"><b>Economy class:</b> {{flight.EconomyClassPrice}}$ win 2 points!</label>
+        <label class="input-label"><b>Economy class:</b> {{flight.EconomyClassPrice}}$ win {{flight.EconomyClassPoints}} points!</label>
       </div>
       <div class="input">
-        <label class="input-label"><b>Business class:</b> {{flight.BusinessClassPrice}}$ win 10 points!</label>
+        <label class="input-label"><b>Business class:</b> {{flight.BusinessClassPrice}}$ win {{flight.BusinessClassPoints}} points!</label>
       </div>
       <div class="input" *ngIf="flight.FirstClassPrice != 0">
-        <label class="input-label"><b>First class:</b> {{flight.FirstClassPrice}}$ win 40 points!</label>
+        <label class="input-label"><b>First class:</b> {{flight.FirstClassPrice}}$ win {{flight.FirstClassPoints}} points!</label>
       </div>
     </form>
   </div>

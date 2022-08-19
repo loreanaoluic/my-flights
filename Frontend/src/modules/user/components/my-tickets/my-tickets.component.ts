@@ -31,4 +31,9 @@ export class MyTicketsComponent implements OnInit {
     }
   }
 
+  cancelReservation(ticketId: number) {
+    this.userService.cancelReservation(ticketId);
+    window.location.reload();
+  }
+
 }

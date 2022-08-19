@@ -29,7 +29,6 @@ export class MyProfileComponent implements OnInit {
       const info = jwt.decodeToken(tokenString);
       this.userService.getUserById(info.Id).subscribe((response) => {
         this.user = response;
-        this.user.ID = info.Id
       });
     }
   }
@@ -40,7 +39,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   deactivateAccount() {
-    this.userService.deactivateAccount(this.user.ID);
+    this.userService.deactivateAccount(this.user.Id);
     this.router.navigate(["login"]);
   }
 

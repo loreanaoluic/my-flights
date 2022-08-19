@@ -18,6 +18,9 @@ type FlightDTO struct {
 	BusinessClassRemainingSeats uint    `gorm:"min:0"`
 	FirstClassRemainingSeats    uint    `gorm:"min:0"`
 	TimeOfBoarding              string  `gorm:"not null"`
+	EconomyClassPoints          uint    `gorm:"min:0"`
+	BusinessClassPoints         uint    `gorm:"min:0"`
+	FirstClassPoints            uint    `gorm:"min:0"`
 }
 
 type FlightsPageable struct {

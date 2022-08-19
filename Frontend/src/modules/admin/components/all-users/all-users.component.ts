@@ -18,7 +18,6 @@ export class AllUsersComponent implements OnInit {
   ngOnInit(): void {
     this.adminService.getAllUsers().subscribe((response) => {
       this.users = response;
-      console.log(this.users);
     });
   }
 

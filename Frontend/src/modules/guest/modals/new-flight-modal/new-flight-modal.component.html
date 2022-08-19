@@ -38,6 +38,10 @@
       <label class="input-label">Time of arrival</label>
       </div>
       <div class="input">
+        <input type="time" class="input-field" id="timeOfBoarding" required>
+      <label class="input-label">Time of boarding</label>
+      </div>
+      <div class="input">
         <select [(ngModel)]="selectedAirline" name="first" class="input-field">
           <option *ngFor="let airline of airlines">
             {{airline.Name}}
@@ -68,6 +72,18 @@
       <div class="input">
         <input type="number" class="input-field" id="firstClassRemainingSeats" name="password2">
       <label class="input-label">First class remaining seats</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="economyClassPoints" required>
+      <label class="input-label">Economy class points</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="businessClassPoints" required>
+      <label class="input-label">Business class points</label>
+      </div>
+      <div class="input">
+        <input type="number" class="input-field" id="firstClassPoints">
+      <label class="input-label">First class points</label>
       </div>
     </form>
   </div>

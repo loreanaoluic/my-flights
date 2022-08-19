@@ -41,7 +41,9 @@ export class UpdateFlightModalComponent implements OnInit {
     || (<HTMLInputElement>document.getElementById("economyClassRemainingSeats")).value == ""
     || (<HTMLInputElement>document.getElementById("businessClassRemainingSeats")).value == ""
     || (<HTMLInputElement>document.getElementById("dateOfDeparture")).value == ""
-    || (<HTMLInputElement>document.getElementById("dateOfArrival")).value == "") {
+    || (<HTMLInputElement>document.getElementById("dateOfArrival")).value == ""
+    || (<HTMLInputElement>document.getElementById("economyClassPoints")).value == ""
+    || (<HTMLInputElement>document.getElementById("businessClassPoints")).value == "") {
 
       this.toastrService.error("Please fill in all fields!");
 
@@ -57,8 +59,12 @@ export class UpdateFlightModalComponent implements OnInit {
       this.flight.BusinessClassPrice = Number((<HTMLInputElement>document.getElementById("businessClassPrice")).value);
       this.flight.EconomyClassRemainingSeats = Number((<HTMLInputElement>document.getElementById("economyClassRemainingSeats")).value);
       this.flight.BusinessClassRemainingSeats = Number((<HTMLInputElement>document.getElementById("businessClassRemainingSeats")).value);
+      this.flight.FirstClassRemainingSeats = Number((<HTMLInputElement>document.getElementById("firstClassRemainingSeats")).value);
       this.flight.DateOfDeparture = (<HTMLInputElement>document.getElementById("dateOfDeparture")).value;
       this.flight.DateOfArrival = (<HTMLInputElement>document.getElementById("dateOfArrival")).value;
+      this.flight.EconomyClassPoints = Number((<HTMLInputElement>document.getElementById("economyClassPoints")).value);
+      this.flight.BusinessClassPoints = Number((<HTMLInputElement>document.getElementById("businessClassPoints")).value);
+      this.flight.FirstClassPoints = Number((<HTMLInputElement>document.getElementById("firstClassPoints")).value);
 
       this.adminService.updateFlight(this.flight);
       window.location.reload();

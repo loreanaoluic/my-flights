@@ -51,3 +51,21 @@ func (rh *TicketsHandler) CreateTicket(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(createdTicket.ToTicketDTO())
 	}
 }
+
+func (rh *TicketsHandler) DeleteTicket(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	ticketDTO, err := rh.repository.DeleteTicket(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*ticketDTO)
+}

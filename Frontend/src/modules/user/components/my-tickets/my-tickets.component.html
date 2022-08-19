@@ -62,7 +62,9 @@
             <span class="airline">{{ticket.AirlineName}}</span>
             <span class="airline airlineslip">{{ticket.TravelClass}} CLASS</span>
             <span class="boarding">
-              <button type="submit" class="btn btn-danger" style="height: 26px; font-size: 9px;">CANCEL</button>
+              <button type="submit" class="btn btn-danger" style="height: 26px; font-size: 9px;" 
+                (click)="cancelReservation(ticket.Id)">CANCEL
+              </button>
             </span>
             <div class="content">
               <span class="jfk">{{ticket.PlaceOfDeparture}}</span>

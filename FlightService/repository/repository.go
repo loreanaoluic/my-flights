@@ -234,6 +234,9 @@ func (repo *Repository) UpdateFlight(flightDTO *model.FlightDTO) (*model.FlightD
 	flight.BusinessClassRemainingSeats = flightDTO.BusinessClassRemainingSeats
 	flight.FirstClassRemainingSeats = flightDTO.FirstClassRemainingSeats
 	flight.TimeOfBoarding = flightDTO.TimeOfBoarding
+	flight.EconomyClassPoints = flightDTO.EconomyClassPoints
+	flight.BusinessClassPoints = flightDTO.BusinessClassPoints
+	flight.FirstClassPoints = flightDTO.FirstClassPoints
 
 	result2 := repo.db.Table("flights").Save(&flight)
 

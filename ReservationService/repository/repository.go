@@ -1,12 +1,14 @@
 package repository
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/my-flights/ReservationService/model"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Repository struct {
@@ -42,7 +44,7 @@ func (repo *Repository) FindTicketsByUserId(id uint, r *http.Request) ([]model.T
 	var ticketsDTO []model.TicketDTO
 	var totalElements int64
 
-	result := repo.db.Scopes(Paginate(r)).Table("tickets").Where("user_id = ?", id).Find(&tickets)
+	result := repo.db.Scopes(Paginate(r)).Table("tickets").Where("(deleted_at IS NULL) and (user_id = ?)", id).Find(&tickets)
 	repo.db.Table("tickets").Count(&totalElements)
 
 	if result.Error != nil {
@@ -65,4 +67,16 @@ func (repo *Repository) CreateTicket(ticket model.Ticket) (model.Ticket, error) 
 	}
 
 	return ticket, nil
+}
+
+func (repo *Repository) DeleteTicket(id uint) (*model.TicketDTO, error) {
+	var ticket model.Ticket
+	result := repo.db.Table("tickets").Where("id = ?", id).Clauses(clause.Returning{}).Delete(&ticket)
+
+	if result.Error != nil {
+		return nil, errors.New("Ticket cannot be deleted!")
+	}
+
+	var retValue model.TicketDTO = ticket.ToTicketDTO()
+	return &retValue, nil
 }

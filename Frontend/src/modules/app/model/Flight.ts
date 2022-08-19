@@ -16,4 +16,7 @@ export interface Flight{
 	BusinessClassRemainingSeats : number
 	FirstClassRemainingSeats : number
 	TimeOfBoarding : string
+	EconomyClassPoints : number
+	BusinessClassPoints : number
+	FirstClassPoints : number
 }

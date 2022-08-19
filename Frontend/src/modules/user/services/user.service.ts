@@ -85,4 +85,22 @@ export class UserService {
       console.log()
     });
   }
+
+  cancelReservation(id: number): void{
+    this.http.delete<Ticket>("http://localhost:8080/api/reservations/delete/" + id, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.success("Reservation cancelled!");
+    });
+  }
+
+  winPoints(points: number, userId: number): void{
+    this.http.post<User>("http://localhost:8080/api/users/" + userId + "/win/" + points, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.success("You won " + points + " points!");
+    });
+  }
 }

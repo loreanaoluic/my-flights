@@ -33,6 +33,11 @@ func (user *User) ToUserDTO() UserDTO {
 		EmailAddress: user.EmailAddress,
 		FirstName:    user.FirstName,
 		LastName:     user.LastName,
+		Role:         user.Role,
+		Banned:       user.Banned,
+		Deactivated:  user.Deactivated,
+		Reports:      user.Reports,
+		Points:       user.Points,
 	}
 }
 
@@ -45,5 +50,10 @@ func (userDTO *UserDTO) ToUser() User {
 		EmailAddress: userDTO.EmailAddress,
 		FirstName:    userDTO.FirstName,
 		LastName:     userDTO.LastName,
+		Role:         userDTO.Role,
+		Banned:       userDTO.Banned,
+		Deactivated:  userDTO.Deactivated,
+		Reports:      userDTO.Reports,
+		Points:       userDTO.Points,
 	}
 }

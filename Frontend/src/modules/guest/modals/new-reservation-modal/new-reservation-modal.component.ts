@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Flight } from 'src/modules/app/model/Flight';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { UserService } from 'src/modules/user/services/user.service';
-import { ToastrService } from 'ngx-toastr';
 import { Ticket } from 'src/modules/app/model/Ticket';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-reservation-modal',
@@ -17,7 +17,7 @@ export class NewReservationModalComponent {
 
   constructor(
     public modalRef: MdbModalRef<NewReservationModalComponent>,
-    private toastrService: ToastrService,
+    private router: Router,
     private userService: UserService
   ) { }
 
@@ -48,6 +48,7 @@ export class NewReservationModalComponent {
 
     this.flight.FirstClassRemainingSeats = this.flight.FirstClassRemainingSeats - 1;
     this.bookATicket(newReservation);
+    this.userService.winPoints(this.flight.FirstClassPoints, this.currentUserId);
   }
 
   newBusinessClassTicket() {
@@ -77,6 +78,7 @@ export class NewReservationModalComponent {
     
     this.flight.BusinessClassRemainingSeats = this.flight.BusinessClassRemainingSeats - 1;
     this.bookATicket(newReservation);
+    this.userService.winPoints(this.flight.BusinessClassPoints, this.currentUserId);
   }
 
   newEconomyClassTicket() {
@@ -106,6 +108,7 @@ export class NewReservationModalComponent {
 
     this.flight.EconomyClassRemainingSeats = this.flight.EconomyClassRemainingSeats - 1;
     this.bookATicket(newReservation);
+    this.userService.winPoints(this.flight.EconomyClassPoints, this.currentUserId);
   }
 
   getRandomInt(min: number, max: number) {
@@ -134,7 +137,15 @@ export class NewReservationModalComponent {
     this.userService.sendEmail(this.currentUserEmail);
     this.userService.updateRemainingSeats(this.flight);
     this.modalRef.close();
-    window.location.reload();
+    this.router.navigate(["admin/all-flights"],
+            { queryParams: { 
+                flyingFrom: '', 
+                flyingTo: '', 
+                departing: '', 
+                passengerNumber: '', 
+                travelClass: 1
+              },
+      },);
   }
 
 }

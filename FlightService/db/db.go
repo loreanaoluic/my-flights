@@ -25,6 +25,9 @@ var flights = []model.Flight{
 		EconomyClassRemainingSeats:  5,
 		BusinessClassRemainingSeats: 2,
 		TimeOfBoarding:              "10:30",
+		EconomyClassPoints:          1,
+		BusinessClassPoints:         5,
+		FirstClassPoints:            10,
 	},
 	{
 		Model:                       gorm.Model{},
@@ -42,6 +45,9 @@ var flights = []model.Flight{
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
 		TimeOfBoarding:              "14:30",
+		EconomyClassPoints:          1,
+		BusinessClassPoints:         5,
+		FirstClassPoints:            10,
 	},
 	{
 		Model:                       gorm.Model{},
@@ -59,6 +65,9 @@ var flights = []model.Flight{
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
 		TimeOfBoarding:              "10:30",
+		EconomyClassPoints:          1,
+		BusinessClassPoints:         5,
+		FirstClassPoints:            10,
 	},
 	{
 		Model:                       gorm.Model{},
@@ -78,6 +87,9 @@ var flights = []model.Flight{
 		BusinessClassRemainingSeats: 20,
 		FirstClassRemainingSeats:    5,
 		TimeOfBoarding:              "10:30",
+		EconomyClassPoints:          1,
+		BusinessClassPoints:         5,
+		FirstClassPoints:            10,
 	},
 	{
 		Model:                       gorm.Model{},
@@ -95,6 +107,9 @@ var flights = []model.Flight{
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
 		TimeOfBoarding:              "10:30",
+		EconomyClassPoints:          1,
+		BusinessClassPoints:         5,
+		FirstClassPoints:            10,
 	},
 	{
 		Model:                       gorm.Model{},
@@ -112,6 +127,9 @@ var flights = []model.Flight{
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
 		TimeOfBoarding:              "17:30",
+		EconomyClassPoints:          1,
+		BusinessClassPoints:         5,
+		FirstClassPoints:            10,
 	},
 	{
 		Model:                       gorm.Model{},
@@ -131,6 +149,9 @@ var flights = []model.Flight{
 		BusinessClassRemainingSeats: 20,
 		FirstClassRemainingSeats:    5,
 		TimeOfBoarding:              "12:30",
+		EconomyClassPoints:          1,
+		BusinessClassPoints:         5,
+		FirstClassPoints:            10,
 	},
 }
 

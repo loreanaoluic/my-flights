@@ -32,6 +32,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/users/unban/{id}", handlers.UnbanUser).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/activate/{id}", handlers.ActivateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/deactivate/{id}", handlers.DeactivateAccount).Methods(http.MethodPost)
+	router.HandleFunc("/api/users/{id}/win/{points}", handlers.WinPoints).Methods(http.MethodPost)
 
 	// Flight Service
 	router.HandleFunc("/api/flights/get-all-flights", handlers.FindAllFlights).Methods(http.MethodGet)
@@ -49,6 +50,7 @@ func HandleRequests() {
 	// Reservation Service
 	router.HandleFunc("/api/reservations/get-all-tickets/{id}", handlers.FindTicketsByUserId).Methods(http.MethodGet)
 	router.HandleFunc("/api/reservations/book", handlers.CreateTicket).Methods(http.MethodPost)
+	router.HandleFunc("/api/reservations/delete/{id}", handlers.DeleteTicket).Methods(http.MethodDelete)
 
 	// Email Service
 	router.HandleFunc("/api/emails/send/{email}", handlers.SendEmail).Methods(http.MethodPost)

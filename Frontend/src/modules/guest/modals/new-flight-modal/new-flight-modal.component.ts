@@ -34,12 +34,15 @@ export class NewFlightModalComponent implements OnInit {
     || (<HTMLInputElement>document.getElementById("placeOfArrival")).value == ""
     || (<HTMLInputElement>document.getElementById("timeOfDeparture")).value == ""
     || (<HTMLInputElement>document.getElementById("timeOfArrival")).value == ""
+    || (<HTMLInputElement>document.getElementById("timeOfBoarding")).value == ""
     || (<HTMLInputElement>document.getElementById("economyClassPrice")).value == ""
     || (<HTMLInputElement>document.getElementById("businessClassPrice")).value == ""
     || (<HTMLInputElement>document.getElementById("economyClassRemainingSeats")).value == ""
     || (<HTMLInputElement>document.getElementById("businessClassRemainingSeats")).value == ""
     || (<HTMLInputElement>document.getElementById("dateOfDeparture")).value == ""
-    || (<HTMLInputElement>document.getElementById("dateOfArrival")).value == "") {
+    || (<HTMLInputElement>document.getElementById("dateOfArrival")).value == ""
+    || (<HTMLInputElement>document.getElementById("economyClassPoints")).value == ""
+    || (<HTMLInputElement>document.getElementById("businessClassPoints")).value == "") {
 
       this.toastrService.error("Please fill in all fields!");
 
@@ -52,6 +55,7 @@ export class NewFlightModalComponent implements OnInit {
         DateOfArrival: (<HTMLInputElement>document.getElementById("dateOfArrival")).value,
         TimeOfDeparture: (<HTMLInputElement>document.getElementById("timeOfDeparture")).value,
         TimeOfArrival: (<HTMLInputElement>document.getElementById("timeOfArrival")).value,
+        TimeOfBoarding : (<HTMLInputElement>document.getElementById("timeOfBoarding")).value,
         Airline: this.selectedAirline,
         FlightStatus : "ACTIVE",
         EconomyClassPrice: Number((<HTMLInputElement>document.getElementById("economyClassPrice")).value),
@@ -59,7 +63,10 @@ export class NewFlightModalComponent implements OnInit {
         FirstClassPrice: Number((<HTMLInputElement>document.getElementById("firstClassPrice")).value),
         EconomyClassRemainingSeats: Number((<HTMLInputElement>document.getElementById("economyClassRemainingSeats")).value),
         BusinessClassRemainingSeats: Number((<HTMLInputElement>document.getElementById("businessClassRemainingSeats")).value),
-        FirstClassRemainingSeats: Number((<HTMLInputElement>document.getElementById("firstClassRemainingSeats")).value)
+        FirstClassRemainingSeats: Number((<HTMLInputElement>document.getElementById("firstClassRemainingSeats")).value),
+        EconomyClassPoints : Number((<HTMLInputElement>document.getElementById("economyClassPoints")).value),
+        BusinessClassPoints : Number((<HTMLInputElement>document.getElementById("businessClassPoints")).value),
+        FirstClassPoints : Number((<HTMLInputElement>document.getElementById("firstClassPoints")).value)
       };
 
       this.adminService.addNewFlight(flight);
