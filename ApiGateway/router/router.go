@@ -46,5 +46,12 @@ func HandleRequests() {
 	router.HandleFunc("/api/airlines/update", handlers.UpdateAirline).Methods(http.MethodPut)
 	router.HandleFunc("/api/airlines/delete/{id}", handlers.DeleteAirline).Methods(http.MethodDelete)
 
+	// Reservation Service
+	router.HandleFunc("/api/reservations/get-all-tickets/{id}", handlers.FindTicketsByUserId).Methods(http.MethodGet)
+	router.HandleFunc("/api/reservations/book", handlers.CreateTicket).Methods(http.MethodPost)
+
+	// Email Service
+	router.HandleFunc("/api/emails/send/{email}", handlers.SendEmail).Methods(http.MethodPost)
+
 	log.Fatal(http.ListenAndServe(":8080", corsHandler.Handler(router)))
 }

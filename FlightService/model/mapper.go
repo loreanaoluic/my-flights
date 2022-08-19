@@ -21,6 +21,7 @@ func (flight *Flight) ToFlightDTO() FlightDTO {
 		EconomyClassRemainingSeats:  flight.EconomyClassRemainingSeats,
 		BusinessClassRemainingSeats: flight.BusinessClassRemainingSeats,
 		FirstClassRemainingSeats:    flight.FirstClassRemainingSeats,
+		TimeOfBoarding:              flight.TimeOfBoarding,
 	}
 }
 
@@ -43,5 +44,6 @@ func (flightDTO *FlightDTO) ToFlight() Flight {
 		EconomyClassRemainingSeats:  flightDTO.EconomyClassRemainingSeats,
 		BusinessClassRemainingSeats: flightDTO.BusinessClassRemainingSeats,
 		FirstClassRemainingSeats:    flightDTO.FirstClassRemainingSeats,
+		TimeOfBoarding:              flightDTO.TimeOfBoarding,
 	}
 }

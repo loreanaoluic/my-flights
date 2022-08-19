@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"> Book a ticket </h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modalRef.close()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form class="card-form">
+      <div class="input">
+        <label class="input-label"><b>Economy class:</b> {{flight.EconomyClassPrice}}$ win 2 points!</label>
+      </div>
+      <div class="input">
+        <label class="input-label"><b>Business class:</b> {{flight.BusinessClassPrice}}$ win 10 points!</label>
+      </div>
+      <div class="input" *ngIf="flight.FirstClassPrice != 0">
+        <label class="input-label"><b>First class:</b> {{flight.FirstClassPrice}}$ win 40 points!</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="newFirstClassTicket()" *ngIf="flight.FirstClassRemainingSeats != 0">
+      BUY FIRST
+    </button>
+    <button type="submit" class="btn btn-info" (click)="newBusinessClassTicket()" *ngIf="flight.BusinessClassRemainingSeats != 0">
+      BUY BUSINESS
+    </button>
+    <button type="submit" class="btn btn-secondary" (click)="newEconomyClassTicket()" *ngIf="flight.EconomyClassRemainingSeats != 0">
+      BUY ECONOMY
+    </button>
+  </div>

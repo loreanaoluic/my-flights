@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Flight } from 'src/modules/app/model/Flight';
-import { AuthService } from 'src/modules/app/services/auth.service';
 import { GuestService } from '../../services/guest.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -9,6 +8,7 @@ import { AdminService } from 'src/modules/admin/services/admin.service';
 import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { NewFlightModalComponent } from '../../modals/new-flight-modal/new-flight-modal.component';
 import { UpdateFlightModalComponent } from '../../modals/update-flight-modal/update-flight-modal.component';
+import { NewReservationModalComponent } from '../../modals/new-reservation-modal/new-reservation-modal.component';
 
 @Component({
   selector: 'app-all-flights',
@@ -19,7 +19,9 @@ import { UpdateFlightModalComponent } from '../../modals/update-flight-modal/upd
 export class AllFlightsComponent implements OnInit {
   modalRef: MdbModalRef<NewFlightModalComponent>
   flights: Flight[] = [];
-  currentRole : any
+  currentRole : any;
+  currentUserId: number;
+  currentUserEmail: string;
   travelClasses: any[] = [
     { name: 'Economy class', value: 1 },
     { name: 'Business class', value: 2 },
@@ -35,7 +37,6 @@ export class AllFlightsComponent implements OnInit {
 
   constructor(
     private guestService: GuestService,
-    private authService : AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private modalService: MdbModalService,
@@ -48,6 +49,8 @@ export class AllFlightsComponent implements OnInit {
       const jwt: JwtHelperService = new JwtHelperService();
       const info = jwt.decodeToken(tokenString);
       this.currentRole = info.role;
+      this.currentUserId = info.Id;
+      this.currentUserEmail = info.emailAddress;
     }
     
     // this.guestService.getAllFlights().subscribe((response) => {
@@ -126,6 +129,12 @@ export class AllFlightsComponent implements OnInit {
 
   openUpdateFlightModal(flight: Flight) {
     this.modalRef = this.modalService.open(UpdateFlightModalComponent, { data: { flight: flight }
+    });
+  }
+
+  makeAReservation(flight: Flight) {
+    this.modalRef = this.modalService.open(NewReservationModalComponent, { 
+      data: { flight: flight, currentUserId: this.currentUserId, currentUserEmail: this.currentUserEmail }
     });
   }
 

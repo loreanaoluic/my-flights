@@ -22,8 +22,9 @@ var flights = []model.Flight{
 		FlightStatus:                model.ACTIVE,
 		EconomyClassPrice:           80,
 		BusinessClassPrice:          160,
-		EconomyClassRemainingSeats:  80,
-		BusinessClassRemainingSeats: 20,
+		EconomyClassRemainingSeats:  5,
+		BusinessClassRemainingSeats: 2,
+		TimeOfBoarding:              "10:30",
 	},
 	{
 		Model:                       gorm.Model{},
@@ -40,6 +41,7 @@ var flights = []model.Flight{
 		BusinessClassPrice:          890,
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
+		TimeOfBoarding:              "14:30",
 	},
 	{
 		Model:                       gorm.Model{},
@@ -56,6 +58,7 @@ var flights = []model.Flight{
 		BusinessClassPrice:          300,
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
+		TimeOfBoarding:              "10:30",
 	},
 	{
 		Model:                       gorm.Model{},
@@ -74,6 +77,7 @@ var flights = []model.Flight{
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
 		FirstClassRemainingSeats:    5,
+		TimeOfBoarding:              "10:30",
 	},
 	{
 		Model:                       gorm.Model{},
@@ -90,6 +94,7 @@ var flights = []model.Flight{
 		BusinessClassPrice:          260,
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
+		TimeOfBoarding:              "10:30",
 	},
 	{
 		Model:                       gorm.Model{},
@@ -106,6 +111,7 @@ var flights = []model.Flight{
 		BusinessClassPrice:          410,
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
+		TimeOfBoarding:              "17:30",
 	},
 	{
 		Model:                       gorm.Model{},
@@ -124,6 +130,7 @@ var flights = []model.Flight{
 		EconomyClassRemainingSeats:  80,
 		BusinessClassRemainingSeats: 20,
 		FirstClassRemainingSeats:    5,
+		TimeOfBoarding:              "12:30",
 	},
 }
 

@@ -7,7 +7,7 @@ export interface Flight{
 	DateOfArrival : string
 	TimeOfDeparture : string
 	TimeOfArrival : string
-	Airline : number
+	Airline : string
 	FlightStatus : string
 	EconomyClassPrice : number
 	BusinessClassPrice : number
@@ -15,4 +15,5 @@ export interface Flight{
 	EconomyClassRemainingSeats : number
 	BusinessClassRemainingSeats : number
 	FirstClassRemainingSeats : number
+	TimeOfBoarding : string
 }

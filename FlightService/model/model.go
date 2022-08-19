@@ -21,4 +21,5 @@ type Flight struct {
 	EconomyClassRemainingSeats  uint         `gorm:"min:0"`
 	BusinessClassRemainingSeats uint         `gorm:"min:0"`
 	FirstClassRemainingSeats    uint         `gorm:"min:0"`
+	TimeOfBoarding              string       `gorm:"not null"`
 }

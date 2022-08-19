@@ -10,6 +10,7 @@ import { SearchFlightsPageComponent } from './pages/search-flights-page/search-f
 import { FormsModule } from '@angular/forms';
 import { NewFlightModalComponent } from './modals/new-flight-modal/new-flight-modal.component';
 import { UpdateFlightModalComponent } from './modals/update-flight-modal/update-flight-modal.component';
+import { NewReservationModalComponent } from './modals/new-reservation-modal/new-reservation-modal.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { UpdateFlightModalComponent } from './modals/update-flight-modal/update-
     SearchFlightsComponent,
     SearchFlightsPageComponent,
     NewFlightModalComponent,
-    UpdateFlightModalComponent
+    UpdateFlightModalComponent,
+    NewReservationModalComponent
   ],
   imports: [
     CommonModule,

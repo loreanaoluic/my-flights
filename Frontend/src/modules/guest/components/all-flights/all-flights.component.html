@@ -141,7 +141,7 @@
                     </div>
                     <div class="active" *ngIf="flight.FlightStatus === 'ACTIVE' && currentRole === 'USER'">
                         <div class="box">
-                            <button class="btn btn-warning" type="button">
+                            <button class="btn btn-warning" type="button" (click)="makeAReservation(flight)">
                                 SELECT
                             </button>
                         </div>

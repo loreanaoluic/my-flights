@@ -167,6 +167,11 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 	}
 
 	for _, flight := range flights {
+		if flight.EconomyClassRemainingSeats == 0 && flight.BusinessClassRemainingSeats == 0 &&
+			flight.FirstClassRemainingSeats == 0 {
+			flight.FlightStatus = model.FULL
+			repo.db.Table("flights").Save(&flight)
+		}
 		flightsDTO = append(flightsDTO, flight.ToFlightDTO())
 	}
 
@@ -228,6 +233,7 @@ func (repo *Repository) UpdateFlight(flightDTO *model.FlightDTO) (*model.FlightD
 	flight.EconomyClassRemainingSeats = flightDTO.EconomyClassRemainingSeats
 	flight.BusinessClassRemainingSeats = flightDTO.BusinessClassRemainingSeats
 	flight.FirstClassRemainingSeats = flightDTO.FirstClassRemainingSeats
+	flight.TimeOfBoarding = flightDTO.TimeOfBoarding
 
 	result2 := repo.db.Table("flights").Save(&flight)
 

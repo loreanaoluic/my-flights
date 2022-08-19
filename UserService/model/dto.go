@@ -34,6 +34,8 @@ type Claims struct {
 	Role         UserRole `json:"role"`
 	Username     string   `json:"username"`
 	Id           uint     `json:"Id"`
+	FirstName    string   `gorm:"not null"`
+	LastName     string   `gorm:"not null"`
 	jwt.StandardClaims
 }
 

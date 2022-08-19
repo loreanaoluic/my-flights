@@ -118,11 +118,6 @@ func UpdateFlight(w http.ResponseWriter, r *http.Request) {
 
 	utils.SetupResponse(&w, r)
 
-	if utils.AuthorizeRole(r, "admin") != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
 	req, _ := http.NewRequest(http.MethodPut,
 		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/update", r.Body)
 	req.Header.Set("Accept", "application/json")

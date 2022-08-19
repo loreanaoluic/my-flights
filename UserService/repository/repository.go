@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"net/mail"
 	"strconv"
@@ -69,8 +68,6 @@ func (repo *Repository) Register(user model.User) (model.User, error) {
 	user.Reports = 0
 	user.Role = model.USER
 	hash, _ := HashPassword(user.Password)
-
-	fmt.Println(DoPasswordsMatch(hash, user.Password))
 
 	user.Password = hash
 

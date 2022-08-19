@@ -22,7 +22,7 @@ var users = []model.User{
 		Model:        gorm.Model{},
 		Username:     "user",
 		Password:     "$2a$04$CU2TcqokLsIDWIBdOFVN7eoYLUBifthvZhurESow757FeFqpO8FRC",
-		EmailAddress: "user@gmail.com",
+		EmailAddress: "fcslrzohkkvzofqkxf@kvhrs.com",
 		FirstName:    "Nikola",
 		LastName:     "Nikolic",
 		Role:         model.UserRole("USER"),

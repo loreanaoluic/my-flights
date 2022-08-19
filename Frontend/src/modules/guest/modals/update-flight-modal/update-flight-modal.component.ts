@@ -35,6 +35,7 @@ export class UpdateFlightModalComponent implements OnInit {
     || (<HTMLInputElement>document.getElementById("placeOfArrival")).value == ""
     || (<HTMLInputElement>document.getElementById("timeOfDeparture")).value == ""
     || (<HTMLInputElement>document.getElementById("timeOfArrival")).value == ""
+    || (<HTMLInputElement>document.getElementById("timeOfBoarding")).value == ""
     || (<HTMLInputElement>document.getElementById("economyClassPrice")).value == ""
     || (<HTMLInputElement>document.getElementById("businessClassPrice")).value == ""
     || (<HTMLInputElement>document.getElementById("economyClassRemainingSeats")).value == ""
@@ -51,6 +52,7 @@ export class UpdateFlightModalComponent implements OnInit {
       this.flight.PlaceOfArrival = (<HTMLInputElement>document.getElementById("placeOfArrival")).value;
       this.flight.TimeOfDeparture = (<HTMLInputElement>document.getElementById("timeOfDeparture")).value;
       this.flight.TimeOfArrival = (<HTMLInputElement>document.getElementById("timeOfArrival")).value;
+      this.flight.TimeOfBoarding = (<HTMLInputElement>document.getElementById("timeOfBoarding")).value;
       this.flight.EconomyClassPrice = Number((<HTMLInputElement>document.getElementById("economyClassPrice")).value);
       this.flight.BusinessClassPrice = Number((<HTMLInputElement>document.getElementById("businessClassPrice")).value);
       this.flight.EconomyClassRemainingSeats = Number((<HTMLInputElement>document.getElementById("economyClassRemainingSeats")).value);

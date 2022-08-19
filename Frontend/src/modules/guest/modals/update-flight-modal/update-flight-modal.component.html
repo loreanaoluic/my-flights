@@ -38,6 +38,10 @@
       <label class="input-label">Time of arrival</label>
       </div>
       <div class="input">
+        <input type="time" class="input-field" id="timeOfBoarding" value="{{flight.TimeOfBoarding}}" required>
+      <label class="input-label">Time of boarding</label>
+      </div>
+      <div class="input">
         <select [(ngModel)]="selectedAirline" name="first" class="input-field">
           <option *ngFor="let airline of airlines">
             {{airline.Name}}
