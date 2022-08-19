@@ -12,6 +12,7 @@ export class MyTicketsComponent implements OnInit {
   tickets: Ticket[] = [];
   firstName: string;
   lastName: string;
+  term: string;
 
   constructor(
     private userService: UserService
