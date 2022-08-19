@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NewFlightModalComponent } from './modals/new-flight-modal/new-flight-modal.component';
 import { UpdateFlightModalComponent } from './modals/update-flight-modal/update-flight-modal.component';
 import { NewReservationModalComponent } from './modals/new-reservation-modal/new-reservation-modal.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { NewReservationModalComponent } from './modals/new-reservation-modal/new
   ],
   imports: [
     CommonModule,
+    Ng2SearchPipeModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forChild(GuestRoutes)

@@ -18,6 +18,7 @@ import { NewReservationModalComponent } from '../../modals/new-reservation-modal
 })
 export class AllFlightsComponent implements OnInit {
   modalRef: MdbModalRef<NewFlightModalComponent>
+  term: string;
   flights: Flight[] = [];
   currentRole : any;
   currentUserId: number;

@@ -9,6 +9,7 @@ import { User } from 'src/modules/app/model/User';
 })
 export class AllUsersComponent implements OnInit {
   users: User[] = [];
+  term: string;
 
   constructor(
     private adminService: AdminService
@@ -19,14 +20,6 @@ export class AllUsersComponent implements OnInit {
       this.users = response;
       console.log(this.users);
     });
-  }
-
-  openNewUserModal() {
-
-  }
-
-  openEditUserModal(user: User) {
-
   }
 
   banUser(id: number) {

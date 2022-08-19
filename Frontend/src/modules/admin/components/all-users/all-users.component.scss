@@ -1,30 +1,77 @@
 .styled-table {
-    border-collapse: collapse;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    margin-top: 50px;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  margin-top: 30px;
+}
+ 
+.styled-table thead tr {
+  background: linear-gradient(to bottom, #36475f, #2c394f);
+  color: white;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid lightgray;
+}
+
+.search-container{
+  width: 20%;
+  background: #fff;
+  height: 30px;
+  border-radius: 30px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.8s;
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.3),
+        -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+  inset -4px -4px 6px 0 rgba(255,255,255,.2),
+  inset 4px 4px 6px 0 rgba(0, 0, 0, .2);
   }
   
-  .styled-table thead tr {
-    background: linear-gradient(to bottom, #36475f, #2c394f);
-    color: white;
+  .search-container:hover > .search-input{
+  width: 400px;
   }
   
-  .styled-table th,
-  .styled-table td {
-    padding: 12px 15px;
+  .search-container .search-input{
+  background: transparent;
+  border: none;
+  outline:none;
+  width: 0px;
+  font-weight: 500;
+  font-size: 16px;
+  transition: 0.8s;
+  
   }
   
-  .styled-table tbody tr {
-    border-bottom: 1px solid #dddddd;
+  .search-container .search-btn .fas{
+  color: #5cbdbb;
   }
   
-  .styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+  @keyframes hoverShake {
+  0% {transform: skew(0deg,0deg);}
+  25% {transform: skew(2deg, 2deg);}
+  75% {transform: skew(-2deg, -2deg);}
+  100% {transform: skew(0deg,0deg);}
   }
   
-  .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid lightgray;
+  .search-container:hover{
+  animation: hoverShake 0.15s linear 3;
   }

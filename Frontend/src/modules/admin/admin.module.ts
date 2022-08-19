@@ -10,6 +10,8 @@ import { AllAirlinesComponent } from './components/all-airlines/all-airlines.com
 import { AllUsersComponent } from './components/all-users/all-users.component';
 import { NewAirlineModalComponent } from './modals/new-airline-modal/new-airline-modal.component';
 import { UpdateAirlineModalComponent } from './modals/update-airline-modal/update-airline-modal.component';
+import { FormsModule } from '@angular/forms';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { UpdateAirlineModalComponent } from './modals/update-airline-modal/updat
   ],
   imports: [
     GuestModule,
+    Ng2SearchPipeModule,
     CommonModule,
+    FormsModule,
     RouterModule.forChild(AdminRoutes)
   ]
 })

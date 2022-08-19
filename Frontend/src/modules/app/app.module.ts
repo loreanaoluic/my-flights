@@ -20,6 +20,7 @@ import { AdminModule } from '../admin/admin.module';
 import { GuestModule } from '../guest/guest.module';
 import { UserModule } from '../user/user.module';
 import { EditUserModalComponent } from './modals/edit-user-modal/edit-user-modal.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { EditUserModalComponent } from './modals/edit-user-modal/edit-user-modal
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

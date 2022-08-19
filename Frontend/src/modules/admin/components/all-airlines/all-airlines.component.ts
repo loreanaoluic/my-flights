@@ -14,6 +14,7 @@ import { UpdateAirlineModalComponent } from '../../modals/update-airline-modal/u
 export class AllAirlinesComponent implements OnInit {
   modalRef: MdbModalRef<NewAirlineModalComponent>
   airlines: Airline[] = [];
+  term: string;
 
   constructor(
     private modalService: MdbModalService,
@@ -23,7 +24,6 @@ export class AllAirlinesComponent implements OnInit {
   ngOnInit(): void {
     this.adminService.getAllAirlines().subscribe((response) => {
       this.airlines = response;
-      console.log(this.airlines);
     });
   }
 
