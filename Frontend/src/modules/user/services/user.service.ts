@@ -112,4 +112,13 @@ export class UserService {
       this.toastr.error("You lost " + points + " points!");
     });
   }
+
+  buyTicket(money: number, userId: number): void{
+    this.http.post<User>("http://localhost:8080/api/users/" + userId + "/buy-ticket/" + money, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      console.log()
+    });
+  }
 }

@@ -275,3 +275,25 @@ func (rh *UsersHandler) LosePoints(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(*userDTO)
 }
+
+func (rh *UsersHandler) BuyTicket(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+
+	userIdStr := params["id"]
+	userId, _ := strconv.ParseInt(userIdStr, 10, 64)
+
+	moneyStr := params["money"]
+	money, _ := strconv.ParseFloat(moneyStr, 64)
+
+	userDTO, err := rh.repository.BuyTicket(uint(userId), float64(money))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
+}

@@ -28,32 +28,34 @@ func (registerDTO *RegisterDTO) ToUser() User {
 func (user *User) ToUserDTO() UserDTO {
 
 	return UserDTO{
-		Id:           user.ID,
-		Username:     user.Username,
-		EmailAddress: user.EmailAddress,
-		FirstName:    user.FirstName,
-		LastName:     user.LastName,
-		Role:         user.Role,
-		Banned:       user.Banned,
-		Deactivated:  user.Deactivated,
-		Reports:      user.Reports,
-		Points:       user.Points,
+		Id:             user.ID,
+		Username:       user.Username,
+		EmailAddress:   user.EmailAddress,
+		FirstName:      user.FirstName,
+		LastName:       user.LastName,
+		Role:           user.Role,
+		Banned:         user.Banned,
+		Deactivated:    user.Deactivated,
+		Reports:        user.Reports,
+		Points:         user.Points,
+		AccountBalance: user.AccountBalance,
 	}
 }
 
 func (userDTO *UserDTO) ToUser() User {
 
 	return User{
-		Model:        gorm.Model{},
-		Username:     userDTO.Username,
-		Password:     userDTO.Password,
-		EmailAddress: userDTO.EmailAddress,
-		FirstName:    userDTO.FirstName,
-		LastName:     userDTO.LastName,
-		Role:         userDTO.Role,
-		Banned:       userDTO.Banned,
-		Deactivated:  userDTO.Deactivated,
-		Reports:      userDTO.Reports,
-		Points:       userDTO.Points,
+		Model:          gorm.Model{},
+		Username:       userDTO.Username,
+		Password:       userDTO.Password,
+		EmailAddress:   userDTO.EmailAddress,
+		FirstName:      userDTO.FirstName,
+		LastName:       userDTO.LastName,
+		Role:           userDTO.Role,
+		Banned:         userDTO.Banned,
+		Deactivated:    userDTO.Deactivated,
+		Reports:        userDTO.Reports,
+		Points:         userDTO.Points,
+		AccountBalance: userDTO.AccountBalance,
 	}
 }

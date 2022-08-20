@@ -265,3 +265,32 @@ func LosePoints(w http.ResponseWriter, r *http.Request) {
 
 	utils.DelegateResponse(response, w)
 }
+
+func BuyTicket(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	utils.SetupResponse(&w, r)
+
+	if utils.AuthorizeRole(r, "user") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	params := mux.Vars(r)
+	userId, _ := strconv.ParseUint(params["id"], 10, 32)
+	money, _ := strconv.ParseFloat(params["money"], 64)
+
+	req, _ := http.NewRequest(http.MethodPost,
+		utils.BaseUserService.Next().Host+UsersServiceApi+"/"+strconv.FormatUint(uint64(userId), 10)+"/buy-ticket/"+strconv.FormatFloat(float64(money), 'f', 2, 64), r.Body)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	utils.DelegateResponse(response, w)
+}

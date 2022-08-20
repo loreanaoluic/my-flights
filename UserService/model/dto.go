@@ -11,17 +11,18 @@ type RegisterDTO struct {
 }
 
 type UserDTO struct {
-	Id           uint   `json:"Id"`
-	Username     string `gorm:"not null;unique"`
-	Password     string `gorm:"not null"`
-	EmailAddress string `gorm:"not null"`
-	FirstName    string `gorm:"not null"`
-	LastName     string `gorm:"not null"`
-	Role         UserRole
-	Banned       bool
-	Deactivated  bool
-	Reports      uint
-	Points       uint
+	Id             uint   `json:"Id"`
+	Username       string `gorm:"not null;unique"`
+	Password       string `gorm:"not null"`
+	EmailAddress   string `gorm:"not null"`
+	FirstName      string `gorm:"not null"`
+	LastName       string `gorm:"not null"`
+	Role           UserRole
+	Banned         bool
+	Deactivated    bool
+	Reports        uint
+	Points         uint
+	AccountBalance float64 `gorm:"min:0.0"`
 }
 
 type Login struct {

@@ -34,6 +34,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/users/deactivate/{id}", handlers.DeactivateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/{id}/win/{points}", handlers.WinPoints).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/{id}/lose/{points}", handlers.LosePoints).Methods(http.MethodPost)
+	router.HandleFunc("/api/users/{id}/buy-ticket/{money}", handlers.BuyTicket).Methods(http.MethodPost)
 
 	// Flight Service
 	router.HandleFunc("/api/flights/get-all-flights", handlers.FindAllFlights).Methods(http.MethodGet)

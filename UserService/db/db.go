@@ -19,13 +19,14 @@ var users = []model.User{
 		Role:         model.UserRole("ADMIN"),
 	},
 	{
-		Model:        gorm.Model{},
-		Username:     "user",
-		Password:     "$2a$04$CU2TcqokLsIDWIBdOFVN7eoYLUBifthvZhurESow757FeFqpO8FRC",
-		EmailAddress: "fcslrzohkkvzofqkxf@kvhrs.com",
-		FirstName:    "Nikola",
-		LastName:     "Nikolic",
-		Role:         model.UserRole("USER"),
+		Model:          gorm.Model{},
+		Username:       "user",
+		Password:       "$2a$04$CU2TcqokLsIDWIBdOFVN7eoYLUBifthvZhurESow757FeFqpO8FRC",
+		EmailAddress:   "fcslrzohkkvzofqkxf@kvhrs.com",
+		FirstName:      "Nikola",
+		LastName:       "Nikolic",
+		Role:           model.UserRole("USER"),
+		AccountBalance: 3000,
 	},
 }
 

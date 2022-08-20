@@ -65,6 +65,7 @@ func (repo *Repository) Register(user model.User) (model.User, error) {
 	user.Banned = false
 	user.Deactivated = false
 	user.Points = 0
+	user.AccountBalance = 0
 	user.Reports = 0
 	user.Role = model.USER
 	hash, _ := HashPassword(user.Password)
@@ -264,6 +265,28 @@ func (repo *Repository) LosePoints(userId uint, points uint) (*model.UserDTO, er
 	} else {
 		user.Points = oldPoints - points
 	}
+
+	result2 := repo.db.Table("users").Save(&user)
+
+	if result2.Error != nil {
+		return nil, errors.New("Error!")
+	}
+
+	var retValue model.UserDTO = user.ToUserDTO()
+	return &retValue, nil
+}
+
+func (repo *Repository) BuyTicket(userId uint, money float64) (*model.UserDTO, error) {
+	var user model.User
+	result := repo.db.Table("users").Where("id = ?", userId).First(&user)
+
+	if result.Error != nil {
+		return nil, errors.New("User not found!")
+	}
+
+	oldMoney := user.AccountBalance
+
+	user.AccountBalance = oldMoney - money
 
 	result2 := repo.db.Table("users").Save(&user)
 
