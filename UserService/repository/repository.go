@@ -105,7 +105,7 @@ func (repo *Repository) FindAllUsers(r *http.Request) ([]model.User, int64, erro
 	var users []model.User
 	var totalElements int64
 
-	result := repo.db.Scopes(Paginate(r)).Table("users").Where("(deleted_at IS NULL)").Find(&users)
+	result := repo.db.Scopes(Paginate(r)).Table("users").Where("(deleted_at IS NULL)").Order("reports desc").Find(&users)
 	repo.db.Table("users").Count(&totalElements)
 
 	if result.Error != nil {

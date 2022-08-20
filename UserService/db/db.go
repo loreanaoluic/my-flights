@@ -28,6 +28,28 @@ var users = []model.User{
 		Role:           model.UserRole("USER"),
 		AccountBalance: 3000,
 	},
+	{
+		Model:          gorm.Model{},
+		Username:       "user2",
+		Password:       "$2a$04$CU2TcqokLsIDWIBdOFVN7eoYLUBifthvZhurESow757FeFqpO8FRC",
+		EmailAddress:   "fcslrzohkkvzofqkxf@kvhrs.com",
+		FirstName:      "Petar",
+		LastName:       "Petrovic",
+		Role:           model.UserRole("USER"),
+		AccountBalance: 3000,
+		Reports:        3,
+	},
+	{
+		Model:          gorm.Model{},
+		Username:       "user3",
+		Password:       "$2a$04$CU2TcqokLsIDWIBdOFVN7eoYLUBifthvZhurESow757FeFqpO8FRC",
+		EmailAddress:   "fcslrzohkkvzofqkxf@kvhrs.com",
+		FirstName:      "Marija",
+		LastName:       "Maric",
+		Role:           model.UserRole("USER"),
+		AccountBalance: 3000,
+		Reports:        1,
+	},
 }
 
 func Init() *gorm.DB {
