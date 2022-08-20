@@ -248,3 +248,29 @@ func (repo *Repository) WinPoints(userId uint, points uint) (*model.UserDTO, err
 	var retValue model.UserDTO = user.ToUserDTO()
 	return &retValue, nil
 }
+
+func (repo *Repository) LosePoints(userId uint, points uint) (*model.UserDTO, error) {
+	var user model.User
+	result := repo.db.Table("users").Where("id = ?", userId).First(&user)
+
+	if result.Error != nil {
+		return nil, errors.New("User not found!")
+	}
+
+	oldPoints := user.Points
+
+	if oldPoints < points {
+		user.Points = 0
+	} else {
+		user.Points = oldPoints - points
+	}
+
+	result2 := repo.db.Table("users").Save(&user)
+
+	if result2.Error != nil {
+		return nil, errors.New("Error!")
+	}
+
+	var retValue model.UserDTO = user.ToUserDTO()
+	return &retValue, nil
+}

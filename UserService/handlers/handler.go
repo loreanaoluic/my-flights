@@ -253,3 +253,25 @@ func (rh *UsersHandler) WinPoints(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(*userDTO)
 }
+
+func (rh *UsersHandler) LosePoints(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+
+	userIdStr := params["id"]
+	userId, _ := strconv.ParseInt(userIdStr, 10, 64)
+
+	pointsStr := params["points"]
+	points, _ := strconv.ParseInt(pointsStr, 10, 64)
+
+	userDTO, err := rh.repository.LosePoints(uint(userId), uint(points))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
+}

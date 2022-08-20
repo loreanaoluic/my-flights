@@ -14,4 +14,5 @@ export interface Ticket{
 	GateNumber : string
 	UserId : number
 	TimeOfBoarding : string
+	LosePoints: number
 }

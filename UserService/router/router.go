@@ -26,6 +26,7 @@ func HandleRequests(handler *handlers.UsersHandler) {
 	router.HandleFunc("/api/users/activate/{id}", handler.ActivateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/deactivate/{id}", handler.DeactivateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/{id}/win/{points}", handler.WinPoints).Methods(http.MethodPost)
+	router.HandleFunc("/api/users/{id}/lose/{points}", handler.LosePoints).Methods(http.MethodPost)
 
 	log.Fatal(http.ListenAndServe(":8081", router))
 }

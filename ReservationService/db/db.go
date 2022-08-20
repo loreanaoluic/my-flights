@@ -25,6 +25,7 @@ var tickets = []model.Ticket{
 		GateNumber:       "11B",
 		UserId:           2,
 		TimeOfBoarding:   "10:30",
+		LosePoints:       2,
 	},
 	{
 		Model:            gorm.Model{},
@@ -42,6 +43,7 @@ var tickets = []model.Ticket{
 		GateNumber:       "10A",
 		UserId:           2,
 		TimeOfBoarding:   "14:30",
+		LosePoints:       2,
 	},
 	{
 		Model:            gorm.Model{},
@@ -59,6 +61,7 @@ var tickets = []model.Ticket{
 		GateNumber:       "8C",
 		UserId:           2,
 		TimeOfBoarding:   "10:30",
+		LosePoints:       10,
 	},
 	{
 		Model:            gorm.Model{},
@@ -76,6 +79,7 @@ var tickets = []model.Ticket{
 		GateNumber:       "43F",
 		UserId:           2,
 		TimeOfBoarding:   "10:30",
+		LosePoints:       20,
 	},
 }
 

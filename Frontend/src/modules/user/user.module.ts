@@ -6,11 +6,13 @@ import { UserRoutes } from './user.routes';
 import { RouterModule } from '@angular/router';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FormsModule } from '@angular/forms';
+import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
 
 @NgModule({
   declarations: [
     MyTicketsComponent,
-    MyTicketsPageComponent
+    MyTicketsPageComponent,
+    CancelReservationModalComponent
   ],
   imports: [
     CommonModule,

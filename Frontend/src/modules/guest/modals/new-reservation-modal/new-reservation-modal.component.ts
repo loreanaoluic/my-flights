@@ -43,7 +43,8 @@ export class NewReservationModalComponent {
           SeatNumber: fullSeatNumber,
           GateNumber: fullGateNumber,
           UserId: this.currentUserId,
-          TimeOfBoarding: this.flight.TimeOfBoarding
+          TimeOfBoarding: this.flight.TimeOfBoarding,
+          LosePoints: this.flight.FirstClassPoints * 2
     };
 
     this.flight.FirstClassRemainingSeats = this.flight.FirstClassRemainingSeats - 1;
@@ -73,7 +74,8 @@ export class NewReservationModalComponent {
           SeatNumber: fullSeatNumber,
           GateNumber: fullGateNumber,
           UserId: this.currentUserId,
-          TimeOfBoarding: this.flight.TimeOfBoarding
+          TimeOfBoarding: this.flight.TimeOfBoarding,
+          LosePoints: this.flight.BusinessClassPoints * 2
     };
     
     this.flight.BusinessClassRemainingSeats = this.flight.BusinessClassRemainingSeats - 1;
@@ -103,7 +105,8 @@ export class NewReservationModalComponent {
           SeatNumber: fullSeatNumber,
           GateNumber: fullGateNumber,
           UserId: this.currentUserId,
-          TimeOfBoarding: this.flight.TimeOfBoarding
+          TimeOfBoarding: this.flight.TimeOfBoarding,
+          LosePoints: this.flight.EconomyClassPoints * 2
     };
 
     this.flight.EconomyClassRemainingSeats = this.flight.EconomyClassRemainingSeats - 1;

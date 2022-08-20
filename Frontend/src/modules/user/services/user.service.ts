@@ -91,7 +91,7 @@ export class UserService {
       headers: this.headers,
       responseType: "json",
     }).subscribe(() => {
-      this.toastr.success("Reservation cancelled!");
+      this.toastr.error("Reservation cancelled!");
     });
   }
 
@@ -100,7 +100,16 @@ export class UserService {
       headers: this.headers,
       responseType: "json",
     }).subscribe(() => {
-      this.toastr.success("You won " + points + " points!");
+      this.toastr.error("You won " + points + " points!");
+    });
+  }
+
+  losePoints(points: number, userId: number): void{
+    this.http.post<User>("http://localhost:8080/api/users/" + userId + "/lose/" + points, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.error("You lost " + points + " points!");
     });
   }
 }

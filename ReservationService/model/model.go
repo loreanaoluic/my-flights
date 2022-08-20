@@ -20,4 +20,5 @@ type Ticket struct {
 	GateNumber       string      `gorm:"not null"`
 	UserId           uint        `gorm:"min:0.0"`
 	TimeOfBoarding   string      `gorm:"not null"`
+	LosePoints       uint        `gorm:"not null"`
 }

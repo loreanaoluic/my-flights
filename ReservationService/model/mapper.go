@@ -20,6 +20,7 @@ func (ticket *Ticket) ToTicketDTO() TicketDTO {
 		GateNumber:       ticket.GateNumber,
 		UserId:           ticket.UserId,
 		TimeOfBoarding:   ticket.TimeOfBoarding,
+		LosePoints:       ticket.LosePoints,
 	}
 }
 
@@ -41,5 +42,6 @@ func (ticketDTO *TicketDTO) ToTicket() Ticket {
 		GateNumber:       ticketDTO.GateNumber,
 		UserId:           ticketDTO.UserId,
 		TimeOfBoarding:   ticketDTO.TimeOfBoarding,
+		LosePoints:       ticketDTO.LosePoints,
 	}
 }
