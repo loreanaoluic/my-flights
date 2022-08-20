@@ -100,7 +100,7 @@ export class UserService {
       headers: this.headers,
       responseType: "json",
     }).subscribe(() => {
-      this.toastr.error("You won " + points + " points!");
+      this.toastr.success("You won " + points + " points!");
     });
   }
 

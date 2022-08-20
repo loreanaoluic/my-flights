@@ -36,6 +36,7 @@ type Claims struct {
 	Id           uint     `json:"Id"`
 	FirstName    string   `gorm:"not null"`
 	LastName     string   `gorm:"not null"`
+	Points       uint
 	jwt.StandardClaims
 }
 

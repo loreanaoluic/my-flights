@@ -18,6 +18,24 @@
       <div class="input" *ngIf="flight.FirstClassPrice != 0">
         <label class="input-label"><b>First class:</b> {{flight.FirstClassPrice}}$ win {{flight.FirstClassPoints}} points!</label>
       </div>
+      <div class="input">
+        <input type="number" class="input-field" id="points" name="password1"/>
+        <label class="input-label">You have <b>{{user.Points}}</b> points that you can use. <i>(1 point = 2% discount)</i></label>
+      </div>
+      <div class="input">
+        <button type="button" class="btn btn-success" (click)="useDiscount()">
+          Use points for discount!
+        </button>
+      </div>
+      <div class="input">
+        <label class="input-label">Economy class price after discount: {{discountPriceEconomy}}$</label>
+      </div>
+      <div class="input">
+        <label class="input-label">Business class price after discount: {{discountPriceBusiness}}$</label>
+      </div>
+      <div class="input" *ngIf="flight.FirstClassPrice != 0">
+        <label class="input-label">First class price after discount: {{discountPriceFirst}}$</label>
+      </div>
     </form>
   </div>
   <div class="modal-footer">

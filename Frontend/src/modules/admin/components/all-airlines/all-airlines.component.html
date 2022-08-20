@@ -21,7 +21,7 @@
 </div>
 
 <div class="container">
-    <button type="button" name="newEmployeeBtn" class="btn btn-secondary" (click)="openNewAirlineModal()">
+    <button type="button" name="newEmployeeBtn" class="btn btn-secondary" (click)="openNewAirlineModal()" *ngIf="currentRole === 'ADMIN'">
       Add new airline company
     </button>
     <table class="styled-table">
@@ -37,17 +37,17 @@
         <tr id="table" *ngFor="let airline of airlines | filter: term">
           <td>{{ airline.Name }}</td>
           <td>
-            <button type="button" class="btn btn-secondary" (click)="openAirlineReviewsModal(airline)">
+            <button type="button" class="btn btn-secondary" style="margin-top: 0px;" (click)="openAirlineReviewsModal(airline)">
                 Reviews
             </button>
           </td>
           <td>
-            <button type="button" class="btn btn-primary" (click)="openEditAirlineModal(airline)">
+            <button type="button" class="btn btn-primary" (click)="openEditAirlineModal(airline)" *ngIf="currentRole === 'ADMIN'">
                 Edit
             </button>
           </td>
           <td>
-            <button type="button" class="btn btn-danger" (click)="deleteAirline(airline.ID)">
+            <button type="button" class="btn btn-danger" (click)="deleteAirline(airline.ID)" *ngIf="currentRole === 'ADMIN'">
                 Delete
             </button>
           </td>

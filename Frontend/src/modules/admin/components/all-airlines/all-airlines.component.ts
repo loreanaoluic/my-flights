@@ -4,6 +4,7 @@ import { AdminService } from 'src/modules/admin/services/admin.service';
 import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { NewAirlineModalComponent } from '../../modals/new-airline-modal/new-airline-modal.component';
 import { UpdateAirlineModalComponent } from '../../modals/update-airline-modal/update-airline-modal.component';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Component({
   selector: 'app-all-airlines',
@@ -15,6 +16,7 @@ export class AllAirlinesComponent implements OnInit {
   modalRef: MdbModalRef<NewAirlineModalComponent>
   airlines: Airline[] = [];
   term: string;
+  currentRole : any
 
   constructor(
     private modalService: MdbModalService,
@@ -22,6 +24,12 @@ export class AllAirlinesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const tokenString = localStorage.getItem('userToken');
+    if (tokenString) {
+      const jwt: JwtHelperService = new JwtHelperService();
+      const info = jwt.decodeToken(tokenString);
+      this.currentRole = info.role;
+    }
     this.adminService.getAllAirlines().subscribe((response) => {
       this.airlines = response;
     });

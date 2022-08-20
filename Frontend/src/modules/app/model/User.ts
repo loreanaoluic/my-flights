@@ -9,4 +9,5 @@ export interface User{
 	Deactivated : boolean;
 	Reports : number;
 	Points : number;
+	AccountBalance : number;
 }

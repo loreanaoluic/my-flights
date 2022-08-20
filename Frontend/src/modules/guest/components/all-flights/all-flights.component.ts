@@ -22,7 +22,6 @@ export class AllFlightsComponent implements OnInit {
   flights: Flight[] = [];
   currentRole : any;
   currentUserId: number;
-  currentUserEmail: string;
   travelClasses: any[] = [
     { name: 'Economy class', value: 1 },
     { name: 'Business class', value: 2 },
@@ -51,7 +50,6 @@ export class AllFlightsComponent implements OnInit {
       const info = jwt.decodeToken(tokenString);
       this.currentRole = info.role;
       this.currentUserId = info.Id;
-      this.currentUserEmail = info.emailAddress;
     }
     
     // this.guestService.getAllFlights().subscribe((response) => {
@@ -135,7 +133,7 @@ export class AllFlightsComponent implements OnInit {
 
   makeAReservation(flight: Flight) {
     this.modalRef = this.modalService.open(NewReservationModalComponent, { 
-      data: { flight: flight, currentUserId: this.currentUserId, currentUserEmail: this.currentUserEmail }
+      data: { flight: flight, currentUserId: this.currentUserId }
     });
   }
 

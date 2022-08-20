@@ -63,7 +63,7 @@ input {
 		border-bottom-color: #6658d3;
 		&+.input-label {
 			color: #6658d3;
-			transform: translateY(-1.5rem);
+			transform: translateY(-0.5rem);
 		}
 	}
 }
@@ -111,4 +111,8 @@ input {
 
 .btn-secondary {
 	width: 150px;
+}
+
+.btn-success {
+	margin-top: -40px;
 }

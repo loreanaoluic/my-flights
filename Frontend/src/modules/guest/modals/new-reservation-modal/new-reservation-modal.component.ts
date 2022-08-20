@@ -1,25 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Flight } from 'src/modules/app/model/Flight';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Ticket } from 'src/modules/app/model/Ticket';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { User } from 'src/modules/app/model/User';
 
 @Component({
   selector: 'app-new-reservation-modal',
   templateUrl: './new-reservation-modal.component.html',
   styleUrls: ['./new-reservation-modal.component.scss']
 })
-export class NewReservationModalComponent {
+export class NewReservationModalComponent implements OnInit {
   flight: Flight;
   currentUserId: number;
-  currentUserEmail: string;
+  user: User;
+  discountPriceEconomy: number;
+  discountPriceBusiness: number;
+  discountPriceFirst: number;
+  points: number = 0;
 
   constructor(
     public modalRef: MdbModalRef<NewReservationModalComponent>,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private toastr: ToastrService
   ) { }
+
+  ngOnInit(): void {
+    this.userService.getUserById(this.currentUserId).subscribe((response) => {
+      this.user = response;
+    });
+  }
 
   newFirstClassTicket() {
     let seatInt = this.getRandomInt(0, this.flight.FirstClassRemainingSeats);
@@ -136,8 +149,11 @@ export class NewReservationModalComponent {
   }
 
   bookATicket(ticket: Ticket) {
+    if (this.points != 0) {
+      this.userService.losePoints(this.points, this.user.Id)
+    }
     this.userService.bookATicket(ticket);
-    this.userService.sendEmail(this.currentUserEmail);
+    this.userService.sendEmail(this.user.EmailAddress);
     this.userService.updateRemainingSeats(this.flight);
     this.modalRef.close();
     this.router.navigate(["admin/all-flights"],
@@ -149,6 +165,34 @@ export class NewReservationModalComponent {
                 travelClass: 1
               },
       },);
+  }
+
+  useDiscount() {
+    if ((<HTMLInputElement>document.getElementById("points")).value == "") {
+
+      this.toastr.error("Please enter points!");
+
+    } else if (Number((<HTMLInputElement>document.getElementById("points")).value) > this.user.Points) {
+
+      this.toastr.error("You do not have enough points!");
+
+    } else if (Number((<HTMLInputElement>document.getElementById("points")).value) < 0) {
+
+      this.toastr.error("Invalid input!");
+
+    } else {
+      this.points = Number((<HTMLInputElement>document.getElementById("points")).value);
+      let discount = (Number((<HTMLInputElement>document.getElementById("points")).value) * 2) / 100;
+
+      let discountPriceEconomy = this.flight.EconomyClassPrice * discount;
+      this.discountPriceEconomy = this.flight.EconomyClassPrice - discountPriceEconomy;
+
+      let discountPriceBusiness = this.flight.BusinessClassPrice * discount;
+      this.discountPriceBusiness = this.flight.BusinessClassPrice - discountPriceBusiness;
+
+      let discountPriceFirst = this.flight.FirstClassPrice * discount;
+      this.discountPriceFirst = this.flight.FirstClassPrice - discountPriceFirst;
+    }
   }
 
 }

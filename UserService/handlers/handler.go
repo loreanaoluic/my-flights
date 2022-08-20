@@ -48,7 +48,7 @@ func (uh *UsersHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	expirationTime := time.Now().Add(time.Hour * 24)
 	claims := model.Claims{EmailAddress: user.EmailAddress, Username: user.Username, FirstName: user.FirstName,
-		LastName: user.LastName, Role: user.Role, Id: user.ID,
+		LastName: user.LastName, Role: user.Role, Id: user.ID, Points: user.Points,
 		StandardClaims: jwt.StandardClaims{ExpiresAt: expirationTime.Unix()}}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
