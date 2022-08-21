@@ -294,3 +294,26 @@ func BuyTicket(w http.ResponseWriter, r *http.Request) {
 
 	utils.DelegateResponse(response, w)
 }
+
+func ReportUser(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	utils.SetupResponse(&w, r)
+
+	params := mux.Vars(r)
+	id, _ := strconv.ParseUint(params["id"], 10, 32)
+
+	req, _ := http.NewRequest(http.MethodPost,
+		utils.BaseUserService.Next().Host+UsersServiceApi+"/report/"+strconv.FormatUint(uint64(id), 10), r.Body)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	utils.DelegateResponse(response, w)
+}

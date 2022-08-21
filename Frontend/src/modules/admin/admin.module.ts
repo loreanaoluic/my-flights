@@ -12,6 +12,8 @@ import { NewAirlineModalComponent } from './modals/new-airline-modal/new-airline
 import { UpdateAirlineModalComponent } from './modals/update-airline-modal/update-airline-modal.component';
 import { FormsModule } from '@angular/forms';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { AirlineReviewComponent } from './components/airline-review/airline-review.component';
+import { AirlineReviewPageComponent } from './pages/airline-review-page/airline-review-page.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     AllUsersComponent,
     NewAirlineModalComponent,
     UpdateAirlineModalComponent,
+    AirlineReviewComponent,
+    AirlineReviewPageComponent,
   ],
   imports: [
     GuestModule,

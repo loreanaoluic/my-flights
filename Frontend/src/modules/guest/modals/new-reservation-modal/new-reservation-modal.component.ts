@@ -43,7 +43,7 @@ export class NewReservationModalComponent implements OnInit {
     }
 
     if (price > this.user.AccountBalance) {
-      this.toastr.error("You do not have enough money!")
+      this.toastr.error("You do not have enough money! Account balance: " + this.user.AccountBalance)
     } else {
 
       let seatInt = this.getRandomInt(0, this.flight.FirstClassRemainingSeats);
@@ -92,7 +92,7 @@ export class NewReservationModalComponent implements OnInit {
     }
 
     if (price > this.user.AccountBalance) {
-      this.toastr.error("You do not have enough money!")
+      this.toastr.error("You do not have enough money! Account balance: " + this.user.AccountBalance)
     } else {
 
       let seatInt = this.getRandomInt(0, this.flight.BusinessClassRemainingSeats);
@@ -141,7 +141,7 @@ export class NewReservationModalComponent implements OnInit {
     }
 
     if (price > this.user.AccountBalance) {
-      this.toastr.error("You do not have enough money!")
+      this.toastr.error("You do not have enough money! Account balance: " + this.user.AccountBalance)
     } else {
 
       let seatInt = this.getRandomInt(0, this.flight.EconomyClassRemainingSeats);

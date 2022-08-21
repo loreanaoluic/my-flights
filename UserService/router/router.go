@@ -28,6 +28,7 @@ func HandleRequests(handler *handlers.UsersHandler) {
 	router.HandleFunc("/api/users/{id}/win/{points}", handler.WinPoints).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/{id}/lose/{points}", handler.LosePoints).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/{id}/buy-ticket/{money}", handler.BuyTicket).Methods(http.MethodPost)
+	router.HandleFunc("/api/users/report/{id}", handler.ReportUser).Methods(http.MethodPost)
 
 	log.Fatal(http.ListenAndServe(":8081", router))
 }

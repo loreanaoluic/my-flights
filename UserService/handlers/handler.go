@@ -297,3 +297,21 @@ func (rh *UsersHandler) BuyTicket(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(*userDTO)
 }
+
+func (rh *UsersHandler) ReportUser(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	userDTO, err := rh.repository.ReportUser(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*userDTO)
+}

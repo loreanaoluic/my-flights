@@ -13,6 +13,7 @@ var BaseFlightService, _ = roundrobin.New(&url.URL{Host: "http://localhost:8082"
 var BaseAirlineService, _ = roundrobin.New(&url.URL{Host: "http://localhost:8083"})
 var BaseReservationService, _ = roundrobin.New(&url.URL{Host: "http://localhost:8084"})
 var BaseEmailService, _ = roundrobin.New(&url.URL{Host: "http://localhost:8085"})
+var BaseReviewService, _ = roundrobin.New(&url.URL{Host: "http://localhost:8086"})
 
 func DelegateResponse(response *http.Response, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))

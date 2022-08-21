@@ -297,3 +297,24 @@ func (repo *Repository) BuyTicket(userId uint, money float64) (*model.UserDTO, e
 	var retValue model.UserDTO = user.ToUserDTO()
 	return &retValue, nil
 }
+
+func (repo *Repository) ReportUser(id uint) (*model.UserDTO, error) {
+	var user model.User
+	result := repo.db.Table("users").Where("id = ?", id).First(&user)
+
+	if result.Error != nil {
+		return nil, errors.New("User not found!")
+	}
+
+	oldReports := user.Reports
+	user.Reports = oldReports + 1
+
+	result2 := repo.db.Table("users").Save(&user)
+
+	if result2.Error != nil {
+		return nil, errors.New("User cannot be reported!")
+	}
+
+	var retValue model.UserDTO = user.ToUserDTO()
+	return &retValue, nil
+}

@@ -35,6 +35,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/users/{id}/win/{points}", handlers.WinPoints).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/{id}/lose/{points}", handlers.LosePoints).Methods(http.MethodPost)
 	router.HandleFunc("/api/users/{id}/buy-ticket/{money}", handlers.BuyTicket).Methods(http.MethodPost)
+	router.HandleFunc("/api/users/report/{id}", handlers.ReportUser).Methods(http.MethodPost)
 
 	// Flight Service
 	router.HandleFunc("/api/flights/get-all-flights", handlers.FindAllFlights).Methods(http.MethodGet)
@@ -56,6 +57,10 @@ func HandleRequests() {
 
 	// Email Service
 	router.HandleFunc("/api/emails/send/{email}", handlers.SendEmail).Methods(http.MethodPost)
+
+	// Reservation Service
+	router.HandleFunc("/api/reviews/{id}", handlers.GetAllReviewsByAirline).Methods(http.MethodGet)
+	router.HandleFunc("/api/reviews", handlers.CreateReview).Methods(http.MethodPost)
 
 	log.Fatal(http.ListenAndServe(":8080", corsHandler.Handler(router)))
 }

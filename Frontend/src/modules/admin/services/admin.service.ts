@@ -7,6 +7,7 @@ import { NewFlight } from 'src/modules/app/model/NewFlight';
 import { Airline } from 'src/modules/app/model/Airline';
 import { Flight } from 'src/modules/app/model/Flight';
 import { User } from 'src/modules/app/model/User';
+import { NewReview } from 'src/modules/app/model/NewReview';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AdminService {
   private headers = new HttpHeaders({ "Content-Type": "application/json"});
 
   constructor(private http: HttpClient, 
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) { }
 
   addNewFlight(flight: NewFlight): void{
@@ -102,6 +103,31 @@ export class AdminService {
       responseType: "json",
     }).subscribe(() => {
       this.toastr.success("Flight updated!");
+    });
+  }
+
+  getReviewsByAirlineId(airlineId: number): Observable<string>{
+    return this.http.get<string>("http://localhost:8080/api/reviews/" + airlineId, {
+      headers: this.headers,
+      responseType: "json",
+    });
+  }
+
+  createReview(newReview: NewReview): void{
+    this.http.post<NewReview>("http://localhost:8080/api/reviews", newReview, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.success("Review sent!");
+    });
+  }
+
+  reportComment(id: number) {
+    this.http.post<User>("http://localhost:8080/api/users/report/" + id, {
+      headers: this.headers,
+      responseType: "json",
+    }).subscribe(() => {
+      this.toastr.success("Comment reported!");
     });
   }
 }

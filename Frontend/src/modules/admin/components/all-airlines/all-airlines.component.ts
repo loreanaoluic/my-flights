@@ -5,6 +5,7 @@ import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { NewAirlineModalComponent } from '../../modals/new-airline-modal/new-airline-modal.component';
 import { UpdateAirlineModalComponent } from '../../modals/update-airline-modal/update-airline-modal.component';
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-airlines',
@@ -20,7 +21,8 @@ export class AllAirlinesComponent implements OnInit {
 
   constructor(
     private modalService: MdbModalService,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -49,8 +51,14 @@ export class AllAirlinesComponent implements OnInit {
     });
   }
 
-  openAirlineReviewsModal(airline: Airline) {
-
+  openAirlineReviews(airlineId: number) {
+    this.router.navigate(
+      ["admin/airline-review"],
+      { queryParams: { 
+          id: airlineId
+        },
+      },
+    );
   }
 
 }

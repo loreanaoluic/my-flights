@@ -37,7 +37,7 @@
         <tr id="table" *ngFor="let airline of airlines | filter: term">
           <td>{{ airline.Name }}</td>
           <td>
-            <button type="button" class="btn btn-secondary" style="margin-top: 0px;" (click)="openAirlineReviewsModal(airline)">
+            <button type="button" class="btn btn-secondary" style="margin-top: 0px;" (click)="openAirlineReviews(airline.ID)">
                 Reviews
             </button>
           </td>

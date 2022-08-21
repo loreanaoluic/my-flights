@@ -81,7 +81,7 @@ export class AllFlightsComponent implements OnInit {
           this.flights = response;
           });
         }
-    );
+      );
   }
 
   signIn() {
