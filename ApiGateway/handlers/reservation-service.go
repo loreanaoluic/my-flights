@@ -15,11 +15,6 @@ func FindTicketsByUserId(w http.ResponseWriter, r *http.Request) {
 
 	utils.SetupResponse(&w, r)
 
-	if utils.AuthorizeRole(r, "user") != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
 	params := mux.Vars(r)
 	id, _ := strconv.ParseUint(params["id"], 10, 32)
 

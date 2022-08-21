@@ -5,6 +5,7 @@ import { Review } from 'src/modules/app/model/Review';
 import { AdminService } from '../../services/admin.service';
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from 'src/modules/user/services/user.service';
 
 @Component({
   selector: 'app-airline-review',
@@ -17,11 +18,13 @@ export class AirlineReviewComponent implements OnInit {
   currentUserId: number;
   currentUserUsername: string;
   averageRating: number = 0;
+  hasTicket: false;
 
   constructor(
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -41,8 +44,10 @@ export class AirlineReviewComponent implements OnInit {
           allRatings += review.rating;
         });
     
-        let averageRating = allRatings / this.reviews.length;
-        this.averageRating = Math.round((averageRating + Number.EPSILON) * 100) / 100
+        if (this.averageRating != 0) {
+          let averageRating = allRatings / this.reviews.length;
+          this.averageRating = Math.round((averageRating + Number.EPSILON) * 100) / 100
+        }
     });
 
     const tokenString = localStorage.getItem('userToken');
@@ -56,40 +61,56 @@ export class AirlineReviewComponent implements OnInit {
   }
 
   reportUser(userId: number) {
-    console.log(userId);
     this.adminService.reportComment(userId);
   }
 
   createReview() {
-    let rating = 0;
-    if((<HTMLInputElement>document.getElementById("1")).checked) {
-      rating = 1;
-    } else if((<HTMLInputElement>document.getElementById("2")).checked) {
-      rating = 2;
-    } else if((<HTMLInputElement>document.getElementById("3")).checked) {
-      rating = 3;
-    } else if((<HTMLInputElement>document.getElementById("4")).checked) {
-      rating = 4;
-    } else if((<HTMLInputElement>document.getElementById("5")).checked) {
-      rating = 5;
-    } else {
-      this.toastr.error("Please enter rating!")
-    }
+    let hasTicket = false;
 
-    if ((<HTMLInputElement>document.getElementById("message")).value == "") {
-      this.toastr.error("Please enter comment!")
-    } else {
-      const review: NewReview = {
-        user_id: Number(this.currentUserId),
-        username: this.currentUserUsername,
-        message: (<HTMLInputElement>document.getElementById("message")).value,
-        rating: Number(rating),
-        airline_id: Number(this.airlineId)
-      };
+    this.adminService.getAirlineById(this.airlineId).subscribe((response) => {
+      let airlineName = response.Name;
 
-      this.adminService.createReview(review);
-      window.location.reload();
-    }
+      this.userService.getTicketsByUserId(this.currentUserId).subscribe((response) => {
+        response.forEach(function(ticket) {  
+          if (ticket.AirlineName == airlineName) {
+            hasTicket = true;
+          }
+        });
+        if (hasTicket == false) {
+          this.toastr.error("You cannot leave a comment about a company whose services you have never used!")
+        } else {
+          let rating = 0;
+          if((<HTMLInputElement>document.getElementById("1")).checked) {
+            rating = 1;
+          } else if((<HTMLInputElement>document.getElementById("2")).checked) {
+            rating = 2;
+          } else if((<HTMLInputElement>document.getElementById("3")).checked) {
+            rating = 3;
+          } else if((<HTMLInputElement>document.getElementById("4")).checked) {
+            rating = 4;
+          } else if((<HTMLInputElement>document.getElementById("5")).checked) {
+            rating = 5;
+          } else {
+            this.toastr.error("Please enter rating!")
+          }
+
+          if ((<HTMLInputElement>document.getElementById("message")).value == "") {
+            this.toastr.error("Please enter comment!")
+          } else {
+            const review: NewReview = {
+              user_id: Number(this.currentUserId),
+              username: this.currentUserUsername,
+              message: (<HTMLInputElement>document.getElementById("message")).value,
+              rating: Number(rating),
+              airline_id: Number(this.airlineId)
+            };
+
+            this.adminService.createReview(review);
+            window.location.reload();
+          }
+        }
+      });
+    });
   }
 
 }

@@ -8,6 +8,7 @@ import { Airline } from 'src/modules/app/model/Airline';
 import { Flight } from 'src/modules/app/model/Flight';
 import { User } from 'src/modules/app/model/User';
 import { NewReview } from 'src/modules/app/model/NewReview';
+import { Ticket } from 'src/modules/app/model/Ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -128,6 +129,13 @@ export class AdminService {
       responseType: "json",
     }).subscribe(() => {
       this.toastr.success("Comment reported!");
+    });
+  }
+
+  getAirlineById(id: number): Observable<Airline>{
+    return this.http.get<Airline>("http://localhost:8080/api/airlines/get-one/" + id, {
+      headers: this.headers,
+      responseType: "json",
     });
   }
 }

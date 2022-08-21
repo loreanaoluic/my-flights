@@ -53,10 +53,16 @@ func (repo *Repository) FindAllAirlines(r *http.Request) ([]model.Airline, int64
 	return airlines, totalElements, nil
 }
 
-func (repo *Repository) FindAirlineById(airlineId uint) (model.Airline, error) {
+func (repo *Repository) FindAirlineById(id uint) (*model.AirlineDTO, error) {
 	var airline model.Airline
-	repo.db.First(&airline, "ID = ?", airlineId)
-	return airline, nil
+	result := repo.db.Table("airlines").Where("id = ?", id).First(&airline)
+
+	if result.Error != nil {
+		return nil, errors.New("Airline not found!")
+	}
+
+	var retValue model.AirlineDTO = airline.ToAirlineDTO()
+	return &retValue, nil
 }
 
 func (repo *Repository) CreateAirline(airlineDTO *model.AirlineDTO) (*model.AirlineDTO, error) {

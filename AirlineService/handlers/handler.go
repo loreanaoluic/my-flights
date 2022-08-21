@@ -32,6 +32,24 @@ func (rh *AirlinesHandler) FindAllAirlines(resWriter http.ResponseWriter, req *h
 	json.NewEncoder(resWriter).Encode(airlines)
 }
 
+func (rh *AirlinesHandler) FindAirlineById(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	airlineDTO, err := rh.repository.FindAirlineById(uint(id))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(w).Encode(*airlineDTO)
+}
+
 func (rh *AirlinesHandler) CreateAirline(w http.ResponseWriter, r *http.Request) {
 	AdjustResponseHeaderJson(&w)
 
