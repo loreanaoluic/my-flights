@@ -41,6 +41,22 @@ var airlines = []model.Airline{
 		Model: gorm.Model{},
 		Name:  "Singapore Airlines",
 	},
+	{
+		Model: gorm.Model{},
+		Name:  "Etihad",
+	},
+	{
+		Model: gorm.Model{},
+		Name:  "JetBlue",
+	},
+	{
+		Model: gorm.Model{},
+		Name:  "New airline",
+	},
+	{
+		Model: gorm.Model{},
+		Name:  "Airline",
+	},
 }
 
 func Init() *gorm.DB {

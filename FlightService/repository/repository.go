@@ -42,26 +42,26 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 func (repo *Repository) FindAllFlights(r *http.Request) ([]model.FlightDTO, int64, error) {
 	var flights []model.Flight
 	var flightsDTO []model.FlightDTO
-	var totalElements int64
+	var totalResults int64
 
 	result := repo.db.Scopes(Paginate(r)).Table("flights").Find(&flights)
-	repo.db.Table("flights").Count(&totalElements)
+	repo.db.Table("flights").Count(&totalResults)
 
 	if result.Error != nil {
-		return nil, totalElements, result.Error
+		return nil, totalResults, result.Error
 	}
 
 	for _, flight := range flights {
 		flightsDTO = append(flightsDTO, flight.ToFlightDTO())
 	}
 
-	return flightsDTO, totalElements, nil
+	return flightsDTO, totalResults, nil
 }
 
 func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64, error) {
 	var flightsDTO []model.FlightDTO
 	var flights []*model.Flight
-	var totalElements int64
+	var totalResults int64
 
 	queryParams := r.URL.Query()
 
@@ -97,10 +97,10 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
-			Count(&totalElements)
+			Count(&totalResults)
 
 		if result.Error != nil {
-			return nil, totalElements, result.Error
+			return nil, totalResults, result.Error
 		}
 
 	} else if travelClass == 2 {
@@ -128,10 +128,10 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
-			Count(&totalElements)
+			Count(&totalResults)
 
 		if result.Error != nil {
-			return nil, totalElements, result.Error
+			return nil, totalResults, result.Error
 		}
 
 	} else if travelClass == 3 {
@@ -159,10 +159,10 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
-			Count(&totalElements)
+			Count(&totalResults)
 
 		if result.Error != nil {
-			return nil, totalElements, result.Error
+			return nil, totalResults, result.Error
 		}
 	}
 
@@ -175,7 +175,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 		flightsDTO = append(flightsDTO, flight.ToFlightDTO())
 	}
 
-	return flightsDTO, totalElements, nil
+	return flightsDTO, totalResults, nil
 }
 
 func (repo *Repository) CancelFlight(id uint) (*model.FlightDTO, error) {

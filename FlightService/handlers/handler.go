@@ -29,7 +29,6 @@ func (rh *FlightsHandler) FindAllFlights(resWriter http.ResponseWriter, req *htt
 
 	flightsDTO, _, _ := rh.repository.FindAllFlights(req)
 
-	//json.NewEncoder(resWriter).Encode(model.FlightsPageable{Elements: flights, TotalElements: totalElements})
 	json.NewEncoder(resWriter).Encode(flightsDTO)
 }
 
@@ -52,7 +51,7 @@ func (rh *FlightsHandler) CancelFlight(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
 		return
 	}
 
@@ -69,7 +68,7 @@ func (rh *FlightsHandler) CreateFlight(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
 		return
 	}
 
@@ -86,7 +85,7 @@ func (rh *FlightsHandler) UpdateFlight(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
 		return
 	}
 

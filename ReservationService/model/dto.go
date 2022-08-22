@@ -23,3 +23,8 @@ type TicketsPageable struct {
 	Elements []TicketDTO `json:"Elements"`
 	//TotalElements int64    `json:"TotalElements"`
 }
+
+type ErrorResponse struct {
+	Message    string `json:"Message"`
+	StatusCode int    `json:"StatusCode"`
+}

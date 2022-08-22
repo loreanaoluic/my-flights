@@ -24,6 +24,11 @@ type FlightDTO struct {
 }
 
 type FlightsPageable struct {
-	Elements []FlightDTO `json:"Elements"`
-	//TotalElements int64    `json:"TotalElements"`
+	Results      []FlightDTO `json:"Results"`
+	TotalResults int64       `json:"TotalResults"`
+}
+
+type ErrorResponse struct {
+	Message    string `json:"Message"`
+	StatusCode int    `json:"StatusCode"`
 }

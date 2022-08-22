@@ -1,4 +1,4 @@
-<div class="search-container">
+<!-- <div class="search-container">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"
@@ -18,7 +18,7 @@
     class="search-input"
     placeholder="Search airline company..."
   />
-</div>
+</div> -->
 
 <div class="container">
     <button type="button" name="newEmployeeBtn" class="btn btn-secondary" (click)="openNewAirlineModal()" *ngIf="currentRole === 'ADMIN'">
@@ -34,7 +34,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr id="table" *ngFor="let airline of airlines | filter: term">
+        <tr id="table" *ngFor="let airline of airlines | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
           <td>{{ airline.Name }}</td>
           <td>
             <button type="button" class="btn btn-secondary" style="margin-top: 0px;" (click)="openAirlineReviews(airline.ID)">
@@ -54,4 +54,5 @@
         </tr>
       </tbody>
     </table>
+    <ngb-pagination [pageSize] = "25" [collectionSize]="100" [(page)]="page" aria-label="Default pagination"></ngb-pagination>
   </div>

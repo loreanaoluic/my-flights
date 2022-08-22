@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AirlineReviewComponent } from './components/airline-review/airline-review.component';
 import { AirlineReviewPageComponent } from './pages/airline-review-page/airline-review-page.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { AirlineReviewPageComponent } from './pages/airline-review-page/airline-
     GuestModule,
     Ng2SearchPipeModule,
     CommonModule,
+    NgbModule,
     FormsModule,
     RouterModule.forChild(AdminRoutes)
   ]

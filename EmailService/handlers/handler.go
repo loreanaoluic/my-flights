@@ -6,6 +6,7 @@ import (
 	"net/smtp"
 
 	"github.com/gorilla/mux"
+	"github.com/my-flights/EmailService/model"
 )
 
 func SendEmail(w http.ResponseWriter, r *http.Request) {
@@ -33,6 +34,6 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
 	}
 }

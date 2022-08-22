@@ -46,7 +46,7 @@ func (rh *TicketsHandler) CreateTicket(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
 	} else {
 		json.NewEncoder(w).Encode(createdTicket.ToTicketDTO())
 	}
@@ -63,7 +63,7 @@ func (rh *TicketsHandler) DeleteTicket(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
 		return
 	}
 

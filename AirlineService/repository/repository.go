@@ -43,7 +43,7 @@ func (repo *Repository) FindAllAirlines(r *http.Request) ([]model.Airline, int64
 	var airlines []model.Airline
 	var totalElements int64
 
-	result := repo.db.Scopes(Paginate(r)).Table("airlines").Where("(deleted_at IS NULL)").Find(&airlines)
+	result := repo.db.Table("airlines").Where("(deleted_at IS NULL)").Find(&airlines)
 	repo.db.Table("airlines").Count(&totalElements)
 
 	if result.Error != nil {

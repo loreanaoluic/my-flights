@@ -10,6 +10,8 @@ import { User } from 'src/modules/app/model/User';
 export class AllUsersComponent implements OnInit {
   users: User[] = [];
   term: string;
+  pageSize = 10;
+  page = 1;
 
   constructor(
     private adminService: AdminService

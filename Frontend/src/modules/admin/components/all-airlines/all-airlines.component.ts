@@ -18,6 +18,8 @@ export class AllAirlinesComponent implements OnInit {
   airlines: Airline[] = [];
   term: string;
   currentRole : any
+  pageSize = 10;
+  page = 1;
 
   constructor(
     private modalService: MdbModalService,
