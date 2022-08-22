@@ -51,11 +51,11 @@ var airlines = []model.Airline{
 	},
 	{
 		Model: gorm.Model{},
-		Name:  "New airline",
+		Name:  "Saudi Arabian Airlines",
 	},
 	{
 		Model: gorm.Model{},
-		Name:  "Airline",
+		Name:  "Alitalia",
 	},
 }
 
