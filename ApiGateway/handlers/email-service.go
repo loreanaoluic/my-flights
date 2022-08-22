@@ -11,7 +11,13 @@ const EmailsServiceApi string = "/api/emails"
 
 func SendEmail(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
+
 	utils.SetupResponse(&w, r)
+
+	if utils.AuthorizeRole(r, "user") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	params := mux.Vars(r)
 	email, _ := params["email"]

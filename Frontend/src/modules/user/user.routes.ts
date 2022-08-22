@@ -7,7 +7,7 @@ export const UserRoutes: Routes = [
     path: "my-tickets",
     pathMatch: "full",
     component: MyTicketsPageComponent,
-    // canActivate: [RoleGuard],
-    // data: { expectedRoles: "Bartender|HeadBartender" },
+    canActivate: [RoleGuard],
+    data: { expectedRoles: "USER" },
   }
 ];

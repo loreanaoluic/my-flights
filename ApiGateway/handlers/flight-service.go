@@ -10,15 +10,14 @@ import (
 
 const FlightsServiceApi string = "/api/flights"
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func FindAllFlights(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
 	utils.SetupResponse(&w, r)
-
-	if utils.AuthorizeRole(r, "admin") != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
 
 	response, err := http.Get(
 		utils.BaseFlightService.Next().Host + FlightsServiceApi + "/get-all-flights")
@@ -86,6 +85,8 @@ func CancelFlight(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateFlight(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	utils.SetupResponse(&w, r)
 
 	if utils.AuthorizeRole(r, "admin") != nil {
@@ -109,14 +110,15 @@ func CreateFlight(w http.ResponseWriter, r *http.Request) {
 	utils.DelegateResponse(response, w)
 }
 
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-}
-
 func UpdateFlight(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
 	utils.SetupResponse(&w, r)
+
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	req, _ := http.NewRequest(http.MethodPut,
 		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/update", r.Body)

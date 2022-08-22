@@ -55,6 +55,11 @@ func FindAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	utils.SetupResponse(&w, r)
 
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	response, err := http.Get(
 		utils.BaseUserService.Next().Host + UsersServiceApi + "/get-all-users")
 

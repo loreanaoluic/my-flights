@@ -15,6 +15,7 @@ import { UserService } from 'src/modules/user/services/user.service';
 export class AirlineReviewComponent implements OnInit {
   airlineId: number;
   reviews: Review[] = [];
+  currentRole: string;
   currentUserId: number;
   currentUserUsername: string;
   averageRating: number = 0;
@@ -44,7 +45,7 @@ export class AirlineReviewComponent implements OnInit {
           allRatings += review.rating;
         });
     
-        if (this.averageRating != 0) {
+        if (this.reviews.length != 0) {
           let averageRating = allRatings / this.reviews.length;
           this.averageRating = Math.round((averageRating + Number.EPSILON) * 100) / 100
         }
@@ -54,7 +55,7 @@ export class AirlineReviewComponent implements OnInit {
     if (tokenString) {
       const jwt: JwtHelperService = new JwtHelperService();
       const info = jwt.decodeToken(tokenString);
-
+      this.currentRole = info.role;
       this.currentUserId = info.Id;
       this.currentUserUsername = info.username;
     }
