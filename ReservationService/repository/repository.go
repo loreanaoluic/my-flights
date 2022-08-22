@@ -3,7 +3,6 @@ package repository
 import (
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/my-flights/ReservationService/model"
 
@@ -19,32 +18,12 @@ func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{db}
 }
 
-func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
-		if page < 0 {
-			page = 0
-		}
-
-		pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
-		switch {
-		case pageSize > 100:
-			pageSize = 100
-		case pageSize <= 0:
-			pageSize = 10
-		}
-
-		offset := page * pageSize
-		return db.Offset(offset).Limit(pageSize)
-	}
-}
-
 func (repo *Repository) FindTicketsByUserId(id uint, r *http.Request) ([]model.TicketDTO, int64, error) {
 	var tickets []model.Ticket
 	var ticketsDTO []model.TicketDTO
 	var totalElements int64
 
-	result := repo.db.Scopes(Paginate(r)).Table("tickets").Where("(deleted_at IS NULL) and (user_id = ?)", id).Find(&tickets)
+	result := repo.db.Table("tickets").Where("(deleted_at IS NULL) and (user_id = ?)", id).Find(&tickets)
 	repo.db.Table("tickets").Count(&totalElements)
 
 	if result.Error != nil {

@@ -19,32 +19,12 @@ func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{db}
 }
 
-func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
-		if page < 0 {
-			page = 0
-		}
-
-		pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
-		switch {
-		case pageSize > 100:
-			pageSize = 100
-		case pageSize <= 0:
-			pageSize = 10
-		}
-
-		offset := page * pageSize
-		return db.Offset(offset).Limit(pageSize)
-	}
-}
-
 func (repo *Repository) FindAllFlights(r *http.Request) ([]model.FlightDTO, int64, error) {
 	var flights []model.Flight
 	var flightsDTO []model.FlightDTO
 	var totalResults int64
 
-	result := repo.db.Scopes(Paginate(r)).Table("flights").Find(&flights)
+	result := repo.db.Table("flights").Find(&flights)
 	repo.db.Table("flights").Count(&totalResults)
 
 	if result.Error != nil {
@@ -73,7 +53,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 
 	if travelClass == 1 {
 
-		result := repo.db.Scopes(Paginate(r)).Table("flights").
+		result := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
@@ -104,7 +84,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 		}
 
 	} else if travelClass == 2 {
-		result := repo.db.Scopes(Paginate(r)).Table("flights").
+		result := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
@@ -135,7 +115,7 @@ func (repo *Repository) SearchFlights(r *http.Request) ([]model.FlightDTO, int64
 		}
 
 	} else if travelClass == 3 {
-		result := repo.db.Scopes(Paginate(r)).Table("flights").
+		result := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
 				"('' = ? or lower(place_of_departure) LIKE ?) and "+
 				"('' = ? or lower(place_of_arrival) LIKE ?) and "+

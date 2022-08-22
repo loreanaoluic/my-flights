@@ -15,8 +15,6 @@ export const AdminRoutes: Routes = [
     path: "all-airlines",
     pathMatch: "full",
     component: AllAirlinesPageComponent,
-    canActivate: [RoleGuard],
-    data: { expectedRoles: "GUEST|ADMIN" },
   },
   {
     path: "all-users",
@@ -29,7 +27,5 @@ export const AdminRoutes: Routes = [
     path: "airline-review",
     pathMatch: "full",
     component: AirlineReviewPageComponent,
-    canActivate: [RoleGuard],
-    data: { expectedRoles: "GUEST|ADMIN" },
   }
 ];

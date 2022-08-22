@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 	"net/mail"
-	"strconv"
 
 	"github.com/my-flights/UserService/model"
 
@@ -79,26 +78,6 @@ func (repo *Repository) Register(user model.User) (model.User, error) {
 	}
 
 	return user, nil
-}
-
-func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
-		if page < 0 {
-			page = 0
-		}
-
-		pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
-		switch {
-		case pageSize > 100:
-			pageSize = 100
-		case pageSize <= 0:
-			pageSize = 10
-		}
-
-		offset := page * pageSize
-		return db.Offset(offset).Limit(pageSize)
-	}
 }
 
 func (repo *Repository) FindAllUsers(r *http.Request) ([]model.User, int64, error) {
