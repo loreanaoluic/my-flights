@@ -22,7 +22,7 @@ export class CancelReservationModalComponent {
   cancelReservation() {
     this.userService.cancelReservation(this.ticketId);
     this.userService.losePoints(this.points, this.userId);
-    this.router.navigate(["user/my-tickets"]);
+    this.router.navigate(["base/user/my-tickets"]);
     window.location.reload();
     this.modalRef.close();
   }

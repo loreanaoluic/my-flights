@@ -25,6 +25,7 @@ func (flight *Flight) ToFlightDTO() FlightDTO {
 		EconomyClassPoints:          flight.EconomyClassPoints,
 		BusinessClassPoints:         flight.BusinessClassPoints,
 		FirstClassPoints:            flight.FirstClassPoints,
+		FlightDuration:              flight.FlightDuration,
 	}
 }
 
@@ -51,5 +52,6 @@ func (flightDTO *FlightDTO) ToFlight() Flight {
 		EconomyClassPoints:          flightDTO.EconomyClassPoints,
 		BusinessClassPoints:         flightDTO.BusinessClassPoints,
 		FirstClassPoints:            flightDTO.FirstClassPoints,
+		FlightDuration:              flightDTO.FlightDuration,
 	}
 }

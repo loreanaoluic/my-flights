@@ -4,22 +4,24 @@
             <div class="row">
                 <div class="booking-form">
                     <form>
-                        <!-- <div class="form-group">
-                            <div class="form-checkbox">
-                                <label for="return">
-                                    <input type="radio" id="return" name="flight-type">
-                                    <span></span>Return
-                                </label>
-                                <label for="one-way">
-                                    <input type="radio" id="one-way" name="flight-type">
-                                    <span></span>One way
-                                </label>
-                                <label for="multi-city">
-                                    <input type="radio" id="multi-city" name="flight-type">
-                                    <span></span>Multi-City
-                                </label>
+                        <form [formGroup]="returnForm">
+                            <div class="form-group">
+                                <div class="form-checkbox">
+                                    <label for="return">
+                                        <input type="radio" id="return" name="isReturn" value="return" formControlName="isReturn" checked>
+                                        <span></span>Return
+                                    </label>
+                                    <label for="one-way">
+                                        <input type="radio" id="one-way" name="isReturn" value="one-way" formControlName="isReturn">
+                                        <span></span>One way
+                                    </label>
+                                    <!-- <label for="multi-city">
+                                        <input type="radio" id="multi-city" name="flight-type">
+                                        <span></span>Multi-City
+                                    </label> -->
+                                </div>
                             </div>
-                        </div> -->
+                        </form>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -41,12 +43,12 @@
                                     <input class="form-control" type="date" id="departing" required>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <span class="form-label">Returning</span>
                                     <input class="form-control" type="date" id="returning" required>
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <span class="form-label">Adults (18+)</span>
@@ -64,11 +66,11 @@
                                     <span class="select-arrow"></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-btn">
-                                    <button class="submit-btn" type="button" (click)="searchFlights()">Search flights</button>
+                                    <button class="submit-btn" type="button" (click)="searchFlights()">
+                                        Search flights
+                                    </button>
                                 </div>
                             </div>
                         </div>

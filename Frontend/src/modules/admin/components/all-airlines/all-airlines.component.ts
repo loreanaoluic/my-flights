@@ -55,7 +55,7 @@ export class AllAirlinesComponent implements OnInit {
 
   openAirlineReviews(airlineId: number) {
     this.router.navigate(
-      ["admin/airline-review"],
+      ["base/admin/airline-review"],
       { queryParams: { 
           id: airlineId
         },

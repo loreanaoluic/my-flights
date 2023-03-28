@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Login } from '../model/Login';
 import { Register } from '../model/Register';
-import { Token } from '../model/Token';
-import { User } from '../model/User';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({

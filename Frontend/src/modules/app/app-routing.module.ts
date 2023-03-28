@@ -8,7 +8,7 @@ import { MyProfileComponent } from './components/my-profile/my-profile.component
 
 const routes: Routes = [
   {
-    path:"home",
+    path:"",
     component: HomeComponent
   },
   {
@@ -16,7 +16,7 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path:"",
+    path:"base",
     component: BaseLayoutComponent,
     children:[
       {

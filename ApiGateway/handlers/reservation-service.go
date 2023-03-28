@@ -30,6 +30,26 @@ func FindTicketsByUserId(w http.ResponseWriter, r *http.Request) {
 	utils.DelegateResponse(response, w)
 }
 
+func FindHistoryByUserId(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	utils.SetupResponse(&w, r)
+
+	params := mux.Vars(r)
+	id, _ := strconv.ParseUint(params["id"], 10, 32)
+
+	response, err := http.Get(
+		utils.BaseReservationService.Next().Host + ReservationsServiceApi + "/get-history/" +
+			strconv.FormatUint(uint64(id), 10))
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	utils.DelegateResponse(response, w)
+}
+
 func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	utils.SetupResponse(&w, r)

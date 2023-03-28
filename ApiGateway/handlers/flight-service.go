@@ -40,13 +40,15 @@ func SearchFlights(w http.ResponseWriter, r *http.Request) {
 	flyingFrom := queryParams.Get("flyingFrom")
 	flyingTo := queryParams.Get("flyingTo")
 	departing := queryParams.Get("departing")
+	returning := queryParams.Get("returning")
 	passengerNumber := queryParams.Get("passengerNumber")
 	travelClass := queryParams.Get("travelClass")
+	isReturn := queryParams.Get("isReturn")
 
 	response, err := http.Get(
 		utils.BaseFlightService.Next().Host + FlightsServiceApi + "/search-all-flights?flyingFrom=" +
-			flyingFrom + "&flyingTo=" + flyingTo + "&departing=" + departing + "&passengerNumber=" + passengerNumber +
-			"&travelClass=" + travelClass)
+			flyingFrom + "&flyingTo=" + flyingTo + "&departing=" + departing + "&returning=" + returning + "&passengerNumber=" +
+			passengerNumber + "&travelClass=" + travelClass + "&isReturn=" + isReturn)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -114,11 +116,6 @@ func UpdateFlight(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
 	utils.SetupResponse(&w, r)
-
-	if utils.AuthorizeRole(r, "admin") != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
 
 	req, _ := http.NewRequest(http.MethodPut,
 		utils.BaseFlightService.Next().Host+FlightsServiceApi+"/update", r.Body)

@@ -4,13 +4,43 @@
             <div  *ngIf="currentRole === 'ADMIN'">
                 <br><br>
                 <button class="btn btn-secondary" type="button" (click)="openNewFlightModal()" 
-                data-toggle="modal" data-backdrop="static" data-keyboard="false"
+                data-toggle="modal" data-backdrop="static" data-keyboard="false" style="font-size: 12px; margin-left: -10px;"
                 > ADD NEW FLIGHT</button>
                 <br><br>
             </div>
             <div class="row">
                 <div class="booking-form">
                     <form>
+                        <form [formGroup]="returnForm">
+                            <div class="form-group">
+                                <div class="form-checkbox">
+                                    <label for="return">
+                                        <input type="radio" id="return" name="isReturn" value="return" formControlName="isReturn">
+                                        <span></span>Return
+                                    </label>
+                                    <label for="one-way">
+                                        <input type="radio" id="one-way" name="isReturn" value="one-way" formControlName="isReturn">
+                                        <span></span>One way
+                                    </label>
+                                    <label for="stops" style="font-weight: 440; margin-left: 40px;">
+                                        <span></span>Stops:
+                                    </label>
+                                    <!-- <label for="direct">
+                                        <input type="checkbox" id="direct" name="stops" value="direct" formControlName="stops">
+                                        <span></span>Direct
+                                    </label>
+                                    <label for="1">
+                                        <input type="checkbox" id="1" name="stops" value="1" formControlName="stops">
+                                        <span></span>1
+                                    </label>
+                                    <label for="2+">
+                                        <input type="checkbox" id="2+" name="stops" value="2+" formControlName="stops">
+                                        <span></span>2+
+                                    </label> -->
+                                </div>
+                                <br>
+                            </div>
+                        </form>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -27,6 +57,7 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -35,7 +66,14 @@
                                     name="departing" required>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <span class="form-label">Returning</span>
+                                    <input class="form-control" type="date" id="returning" [(ngModel)]="returning" 
+                                    name="returning" required>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
                                 <div class="form-group">
                                     <span class="form-label">Adults (18+)</span>
                                     <input class="form-control" type="number" placeholder="Number" id="passengerNumber" 
@@ -54,9 +92,8 @@
                                     <span class="select-arrow"></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
+            
+                            <div class="col-md-2">
                                 <div class="form-btn">
                                     <button class="submit-btn" type="button" (click)="searchFlights()">
                                         Search flights
@@ -76,46 +113,52 @@
 </div>
 
 <div class="search-container">
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"
-    class="bi bi-search"
-    viewBox="0 0 16 16"
->
-    <path
-    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-    />
-</svg>
-<input
-    type="text"
-    name="search"
-    [(ngModel)]="term"
-    class="search-input"
-    placeholder="Search flights..."
-/>
+
 </div>
   
 <div class="container-flights">
-    <div class="row-flights" *ngFor="let flight of flights | filter: term">
+    <div class="row-flights" *ngFor="let flight of flights">
         <div class="col-sm-3">
             <div class="boarding-pass">
                 <header>
-                    <div class="logo">
-                        <p> {{ flight.Airline }} </p>
+                    <div class="logo" *ngIf="isReturnInit">
+                        <p *ngIf="flight[0][0].Airline != flight[1][0].Airline"> {{ flight[0][0].Airline }} + {{ flight[1][0].Airline }} </p>
+                        <p *ngIf="flight[0][0].Airline == flight[1][0].Airline"> {{ flight[0][0].Airline }}</p>
                     </div>
-                    <div class="flight">
+                    <div class="logo" *ngIf="!isReturnInit">
+                        <p *ngIf="flight[0][0].Airline"> {{ flight[0][0].Airline }} </p>
+                    </div>
+                    <!-- <div class="flight">
                       <small>flight</small>
                       <strong>{{ flight.FlightNumber }}</strong>
-                    </div>
+                    </div> -->
                   </header>
                 <section class="cities">
                     <div class="city">
-                    <small> {{ flight.PlaceOfDeparture }} </small>
+                        <small>
+                            <span class="stop" *ngIf="flight[0].length-1 == 0" style="color: green;"> DIRECT </span>
+                            <span class="stop" *ngIf="flight[0].length-1 == 1"> 1 stop </span>
+                            <span class="stop" *ngIf="flight[0].length-1 > 1"> {{flight[0].length-1}} stops </span>
+                            ({{ flight[0][flight[0].length-1].FullTimeHours }}h {{ flight[0][flight[0].length-1].FullTimeMinutes }}m)
+                            <button class="information" type="button" (click)="viewInformation(flight[0])" *ngIf="flight[0].length-1 != 0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                </svg>
+                            </button>
+                        </small>
                     </div>
-                    <div class="city">
-                    <small> {{ flight.PlaceOfArrival }} </small>
+                    <div class="city" *ngIf="isReturnInit">
+                        <small>
+                            <span class="stop" *ngIf="flight[1].length-1 == 0" style="color: green;"> DIRECT </span>
+                            <span class="stop" *ngIf="flight[1].length-1 == 1"> 1 stop </span>
+                            <span class="stop" *ngIf="flight[1].length-1 > 1"> {{flight[1].length-1}} stops </span>
+                            ({{ flight[1][flight[1].length-1].FullTimeHours }}h {{ flight[1][flight[1].length-1].FullTimeMinutes }}m)
+                            <button class="information" type="button" (click)="viewInformation(flight[1])" *ngIf="flight[0].length-1 != 0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                </svg>
+                            </button>
+                        </small>
                     </div>
                     <svg class="airplane">
                     <use xlink:href="#airplane"></use>
@@ -123,64 +166,83 @@
                 </section>
                 <section class="infos">
                     <div class="places">
-                    <div class="box2">
-                        <small>Economy class price</small>
-                        <strong> {{ flight.EconomyClassPrice }} $ </strong>
+                        <div class="box">
+                            <small>{{ flight[0][0].PlaceOfDeparture }}</small>
+                            <strong> {{ flight[0][0].DateOfDeparture }} {{ flight[0][0].TimeOfDeparture }} </strong>
+                        </div>
+                        <div class="box">
+                            <small>{{ flight[0][flight[0].length-1].PlaceOfArrival }}</small>
+                            <strong> {{ flight[0][flight[0].length-1].DateOfArrival }} {{ flight[0][flight[0].length-1].TimeOfArrival }} </strong>
+                        </div>
                     </div>
-                    <div class="box2">
-                        <small>Business class price</small>
-                        <strong> {{ flight.BusinessClassPrice }} $ </strong>
-                    </div>
-                    <div class="box2" *ngIf="flight.FirstClassPrice !== 0">
-                        <small>First class price</small>
-                        <strong> {{ flight.FirstClassPrice }} $ </strong>
-                    </div>
-                    </div>
-                    <div class="times">
-                    <div class="box">
-                        <small>Departure</small>
-                        <strong> {{ flight.DateOfDeparture }} {{ flight.TimeOfDeparture }} </strong>
-                    </div>
-                    <div class="box">
-                        <small>Arrival</small>
-                        <strong> {{ flight.DateOfArrival }} {{ flight.TimeOfArrival }} </strong>
-                    </div>
+                    <div class="times" *ngIf="isReturnInit">
+                        <div class="box">
+                            <small>{{ flight[1][0].PlaceOfDeparture }}</small>
+                            <strong> {{ flight[1][0].DateOfDeparture }} {{ flight[1][0].TimeOfDeparture }} </strong>
+                        </div>
+                        <div class="box">
+                            <small>{{ flight[1][flight[1].length-1].PlaceOfArrival }}</small>
+                            <strong> {{ flight[1][flight[1].length-1].DateOfArrival }} {{ flight[1][flight[1].length-1].TimeOfArrival }} </strong>
+                        </div>
                     </div>
                 </section>
                 <section class="strap">
-                    <div class="active" *ngIf="flight.FlightStatus !== 'CANCELED' && currentRole === 'ADMIN'">
+                    <div class="box2">
+                        <small>Economy class price</small>
+                        <strong *ngIf="!isReturnInit"> {{ flight[0][flight[0].length-1].EconomyClassPrice }} $ </strong>
+                        <strong *ngIf="isReturnInit"> {{ flight[0][flight[0].length-1].EconomyClassPrice + flight[1][flight[1].length-1].EconomyClassPrice }} $ </strong>
+                    </div>
+                    <div class="box2">
+                        <small>Business class price</small>
+                        <strong *ngIf="!isReturnInit"> {{ flight[0][flight[0].length-1].BusinessClassPrice }} $ </strong>
+                        <strong *ngIf="isReturnInit"> {{ flight[0][flight[0].length-1].BusinessClassPrice + flight[1][flight[1].length-1].BusinessClassPrice }} $ </strong>
+                    </div>
+                    <div *ngIf="isReturnInit">
+                        <div class="box2" *ngIf="flight[0][flight[0].length-1].FirstClassPrice !== 0 && flight[1][flight[1].length-1].FirstClassPrice !== 0 ">
+                            <small>First class price</small>
+                            <strong> {{ flight[0][flight[0].length-1].FirstClassPrice + flight[1][flight[1].length-1].FirstClassPrice }} $ </strong>
+                        </div>
+                    </div>
+                    <div *ngIf="!isReturnInit">
+                        <div class="box2" *ngIf="flight[0][flight[0].length-1].FirstClassPrice !== 0">
+                            <small>First class price</small>
+                            <strong> {{ flight[0][flight[0].length-1].FirstClassPrice }} $ </strong>
+                        </div>
+                    </div>
+
+                    <div class="active" *ngIf="flightStatus !== 'CANCELED' && currentRole === 'ADMIN'">
                         <div class="box">
-                            <button class="btn btn-primary" type="button" style="width: 160px; margin-top: -30px;" 
+                            <!-- <button class="btn btn-primary" type="button" style="width: 160px; margin-top: -30px;" 
                             (click)="openUpdateFlightModal(flight)" data-toggle="modal" data-backdrop="static" 
                             data-keyboard="false">
                                 UPDATE
-                            </button>
+                            </button> -->
                             <button class="btn btn-danger" type="button" style="width: 160px;" 
-                            (click)="cancelFlight(flight.Id)">
+                            (click)="cancelFlight(flight)">
                                 CANCEL FLIGHT
                             </button>
                         </div>
                     </div>
-                    <div class="active" *ngIf="flight.FlightStatus === 'ACTIVE' && currentRole === 'USER'">
+                    <div class="active" *ngIf="flightStatus === 'ACTIVE' && currentRole === 'USER'">
                         <div class="box">
                             <button class="btn btn-warning" type="button" (click)="makeAReservation(flight)">
                                 SELECT
                             </button>
                         </div>
                     </div>
-                    <div class="signUp" *ngIf="flight.FlightStatus === 'ACTIVE' && currentRole === undefined">
+                    <div class="signUp" *ngIf="flightStatus === 'ACTIVE' && currentRole === undefined">
                         <div class="box">
                             <button class="btn btn-warning" type="button" (click)="signIn()">
                                 SIGN IN & BOOK A TICKET!
                             </button>
                         </div>
                     </div>
-                    <div class="full" *ngIf="flight.FlightStatus === 'FULL'">
+                    <div class="full" *ngIf="flightStatus === 'FULL'">
                         <div class="box">
                             <p> The tickets are sold out. </p>
                         </div>
                     </div>
-                    <div class="canceled" *ngIf="flight.FlightStatus === 'CANCELED'">
+                    <div class="canceled" *ngIf="flightStatus === 'CANCELED'">
                         <div class="box">
                             <p>Flight is cancelled.</p>
                         </div>

@@ -53,6 +53,7 @@ func HandleRequests() {
 
 	// Reservation Service
 	router.HandleFunc("/api/reservations/get-all-tickets/{id}", handlers.FindTicketsByUserId).Methods(http.MethodGet)
+	router.HandleFunc("/api/reservations/get-history/{id}", handlers.FindHistoryByUserId).Methods(http.MethodGet)
 	router.HandleFunc("/api/reservations/book", handlers.CreateTicket).Methods(http.MethodPost)
 	router.HandleFunc("/api/reservations/delete/{id}", handlers.DeleteTicket).Methods(http.MethodDelete)
 

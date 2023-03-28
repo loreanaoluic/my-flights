@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bree+Serif&family=EB+Garamond:ital,wght@0,500;1,800&display=swap');
 
 .nav-item {
-    padding: 10px 12px;
+    padding: 2px 10px;
 }
 
 .nav-link{
@@ -12,7 +12,7 @@
     font-family: 'Bebas Neue', cursive;
 	display: inline-block;
 	position: relative;
-	font-size: 22px;
+	font-size: 18px;
 	color: #464b55;
 	margin: 0;
     position: relative;
@@ -23,7 +23,7 @@
         position: absolute;
         top: 0;
         left:0;
-        height:122%;
+        height: 100%;
         width: 100%;
         z-index:-1;
         transition: .2s;

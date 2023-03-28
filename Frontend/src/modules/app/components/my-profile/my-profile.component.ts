@@ -39,7 +39,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   deactivateAccount() {
-    this.userService.deactivateAccount(this.user.Id);
+    this.userService.deactivateAccount(this.user.ID);
     this.router.navigate(["login"]);
   }
 

@@ -54,10 +54,10 @@
           </td>
           <td>
             <div *ngIf="user.Role == 'USER'">
-              <button type="button" class="btn btn-danger" *ngIf="user.Banned == true" (click)="unbanUser(user.Id)">
+              <button type="button" class="btn btn-danger" *ngIf="user.Banned == true" (click)="unbanUser(user.ID)">
                   UNBAN
               </button>
-              <button type="button" class="btn btn-danger" *ngIf="user.Banned == false" (click)="banUser(user.Id)">
+              <button type="button" class="btn btn-danger" *ngIf="user.Banned == false" (click)="banUser(user.ID)">
                 BAN
               </button>
             </div>

@@ -1,15 +1,15 @@
 .container-flights {
   margin: 0 auto;
   float: none;
-  margin-top: 40px;
+  margin-top: 240px;
 }
 
 .row-flights {
   display: flex;
   flex-wrap: wrap;
-  height: 140px;
+  height: 20px;
   position: center;
-  margin-bottom: 180px;
+  margin-bottom: 190px;
 }
 
 @mixin center {
@@ -27,7 +27,7 @@ Boarding Pass
   @include center;
   margin-left: 482px;
   width: 1240px;
-  height: 280px;
+  height: 190px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 5px 30px rgba(0, 0, 0, .2);
@@ -52,7 +52,7 @@ Boarding Pass
   & header {
     background: linear-gradient(to bottom, #36475f, #2c394f);
     padding: 12px 20px;
-    height: 53px;
+    height: 42px;
 
     .logo {
       float: left;
@@ -60,7 +60,7 @@ Boarding Pass
       height: 31px;
       & p {
         color: white;
-        font-size: 18px;
+        font-size: 12px;
       }
     }
 
@@ -68,15 +68,16 @@ Boarding Pass
       float: right;
       color: #fff;
       text-align: right;
+      margin-top: -4px;
 
       small {
         font-size: 8px;
-        margin-bottom: 2px;
+        margin-bottom: -1px;
         opacity: 0.8;
       }
 
       strong {
-        font-size: 18px;
+        font-size: 12px;
       }
 
     }
@@ -95,7 +96,8 @@ Boarding Pass
     }
 
     .city {
-      padding: 20px 18px;
+      padding: 10px 18px;
+      margin-left: -420px;
       float: left;
 
       &:nth-child(2) {
@@ -103,22 +105,27 @@ Boarding Pass
       }
 
       strong {
-        font-size: 40px;
+        font-size: 20px;
         font-weight: 300;
         line-height: 1;
       }
 
       small {
         margin-bottom: 0px;
-        margin-left: 3px;
+        margin-left: 180px;
+        margin-right: 350px;
+
+        .stop {
+          color: red;
+        }
       }
     }
 
     .airplane {
       position: absolute;
       width: 30px;
-      height: 25px;
-      top: 57%;
+      height: 20px;
+      top: 50%;
       left: 30%;
       opacity: 0;
       transform: translate(-50%, -50%);
@@ -144,29 +151,79 @@ Boarding Pass
   .infos {
     display: flex;
     border-top: 1px solid #99D298;
+    height: 56px;
 
     .places,
     .times {
       width: 50%;
-      padding: 10px 0;
+      padding: -6px 0;
 
       &::after {
         content: '';
         display: table;
         clear: both;
       }
-    }
-    
-    .times {
-      
+
       strong {
         transform: scale(0.9);
         transform-origin: left bottom;
       }
     }
 
+    .times {
+      border-left: 1px solid #99D298;  
+    }
+
+    .box {
+      padding: 10px 20px 10px;
+      width: 50%;
+      float: left;
+
+      small {
+        font-size: 10px;
+      }
+    }
+
+    .airplane {
+      position: absolute;
+      width: 30px;
+      height: 20px;
+      top: 50%;
+      left: 30%;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      animation: move 3s infinite;
+    }
+
+    @keyframes move {
+      40% {
+        left: 50%;
+        opacity: 1;
+      }
+      100% {
+        left: 70%;
+        opacity: 0;
+      }
+    }
+
+  }
+
+  
+  /*--------------------
+  Strap
+  --------------------*/
+  .strap {
+    clear: both;
+    position: relative;
+    border-top: 1px solid #99D298;
+
+    &::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+
     .places {
-      background: #ECECEC;
       border-right: 1px solid #99D298;
       
       small {
@@ -178,16 +235,6 @@ Boarding Pass
       }
     }
 
-    .box {
-      padding: 10px 20px 10px;
-      width: 50%;
-      float: left;
-
-      small {
-        font-size: 10px;
-      }
-    }
-
     .box2 {
       padding: 10px 20px 10px;
       width: 33%;
@@ -196,80 +243,67 @@ Boarding Pass
       small {
         font-size: 10px;
       }
-    }
-  }
-
-  
-  /*--------------------
-  Strap
-  --------------------*/
-  .strap {
-    clear: both;
-    position: relative;
-    border-top: 1px solid #99D298;
-    height: 80px;
-
-    &::after {
-      content: '';
-      display: table;
-      clear: both;
+      
     }
 
     .box {
-      padding: 23px 0 20px 20px;
+      width: 50%;
+      float: left;
 
       & div {
-        margin-bottom: 15px;
         
         small {
           font-size: 10px;
         }
 
         strong {
-          font-size: 13px;
+          font-size: 12px;
         }
       }
 
       sup {
         font-size: 8px;
         position: relative;
-        top: -5px;
       }
-    }
-    .qrcode {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 80px;
-      height: 80px;
     }
 
     .active {
-      margin-left: 1030px;
-      width: 140px;
+      margin-left: 1100px;
 
       .btn-warning {
-        width: 140px !important;
         font-family: sans-serif;
         color: white;
+        margin-top: 12px;
+      }
+
+      .btn-danger {
+        font-family: sans-serif;
+        color: white;
+        margin-top: 12px;
+      }
+
+      .btn-primary {
+        font-family: sans-serif;
+        color: white;
+        margin-top: 12px;
       }
     }
 
     .signUp {
-      margin-left: 940px;
-      width: 300px;
+      margin-left: 1000px;
 
       .btn-warning {
-        width: 240px !important;
         font-family: sans-serif;
         color: white;
+        margin-top: 8px;
+        width: 200px !important;
       }
     }
 
     .full {
       margin-left: 1050px;
       width: 140px;
-
+      
       & p {
         font-size: 14px;
         font-weight: bold;
@@ -298,13 +332,13 @@ Boarding Pass
 .section {
 	min-width: 50%;
 	min-height: 50%;
-	margin-top: -10px;
+	margin-top: 0px;
 }
 
 .section .section-center {
-  font-size: 14px;
+  font-size: 12px;
 	position: absolute;
-	top: 36%;
+	top: 24%;
 	left: 0;
 	right: 0;
 	-webkit-transform: translateY(-50%);
@@ -318,7 +352,7 @@ Boarding Pass
 
 .booking-form {
 	background: rgba(74, 72, 72, 0.7);
-	padding: 40px;
+	padding: 14px;
 	border-radius: 6px;
 }
 
@@ -354,7 +388,7 @@ Boarding Pass
 	text-align: center;
 	pointer-events: none;
 	color: rgba(0, 0, 0, 0.3);
-	font-size: 14px;
+	font-size: 12px;
 }
 
 .booking-form select.form-control+.select-arrow:after {
@@ -365,14 +399,19 @@ Boarding Pass
 
 .booking-form .form-label {
 	display: block;
-	margin-left: 20px;
+	margin-left: 2px;
 	margin-bottom: 5px;
 	font-weight: 400;
 	text-transform: uppercase;
 	line-height: 24px;
-	height: 24px;
+	height: 20px;
 	font-size: 12px;
 	color: #fff;
+}
+
+.booking-form .form-control {
+	height: 30px;
+	font-size: 12px;
 }
 
 .booking-form .form-checkbox input {
@@ -385,7 +424,7 @@ Boarding Pass
 	position: relative;
 	padding-top: 4px;
 	padding-left: 30px;
-	font-weight: 400;
+	font-weight: 440;
 	color: #fff;
 }
 
@@ -411,7 +450,7 @@ Boarding Pass
 	width: 0px;
 	height: 0px;
 	border-radius: 50%;
-	background-color: #f23e3e;
+	background-color: #6ec8ec;
 	-webkit-transition: 0.2s all;
 	transition: 0.2s all;
 	-webkit-transform: translate(-50%, -50%);
@@ -429,21 +468,22 @@ Boarding Pass
 }
 
 .booking-form .form-btn {
-	margin-top: 27px;
+	margin-top: 31px;
 }
 
 .booking-form .submit-btn {
 	color: #fff;
-	background-color: #f23e3e;
+	background-color: #6ec8ec;
 	font-weight: 400;
-	height: 50px;
-	font-size: 14px;
+	height: 33px;
+	font-size: 12px;
 	border: none;
-	width: 100%;
+	width: 90%;
 	border-radius: 40px;
 	text-transform: uppercase;
 	-webkit-transition: 0.2s all;
 	transition: 0.2s all;
+  margin-top: -20px;
 }
 
 .booking-form .submit-btn:hover,
@@ -451,50 +491,39 @@ Boarding Pass
 	opacity: 0.9;
 }
 
-.search-container{
-  margin-top: 330px;
-  width: 20%;
-  background: #fff;
-  height: 30px;
-  border-radius: 30px;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: 0.8s;
-  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.3),
-        -4px -4px 6px 0 rgba(116, 125, 136, .2), 
-  inset -4px -4px 6px 0 rgba(255,255,255,.2),
-  inset 4px 4px 6px 0 rgba(0, 0, 0, .2);
+.sort-by-container {
+  margin-top: 190px;
+  .label {
+    font-weight: 700;
+    font-size: 13px;
   }
-  
-  .search-container:hover > .search-input{
-  width: 400px;
+  .sort-by {
+    width: 110px;
+    font-size: 13px;
+    margin-left: 10px;
   }
-  
-  .search-container .search-input{
-  background: transparent;
+}
+
+.btn-sort {
+  padding: 0;
+  color: #fff;
+	background-color: #6ec8ec;
+	font-weight: 400;
+	height: 26px;
+	font-size: 12px;
+	border: none;
+	width: 6%;
+	border-radius: 40px;
+	text-transform: uppercase;
+	-webkit-transition: 0.2s all;
+	transition: 0.2s all;
+  margin-left: 8px;
+}
+
+.information {
+  padding: 0;
   border: none;
-  outline:none;
-  width: 0px;
-  font-weight: 500;
-  font-size: 16px;
-  transition: 0.8s;
-  
-  }
-  
-  .search-container .search-btn .fas{
-  color: #5cbdbb;
-  }
-  
-  @keyframes hoverShake {
-  0% {transform: skew(0deg,0deg);}
-  25% {transform: skew(2deg, 2deg);}
-  75% {transform: skew(-2deg, -2deg);}
-  100% {transform: skew(0deg,0deg);}
-  }
-  
-  .search-container:hover{
-  animation: hoverShake 0.15s linear 3;
-  }
+  background: none;
+  margin-left: 10px;
+  color: #6ec8ec;
+}

@@ -19,4 +19,7 @@ export interface Flight{
 	EconomyClassPoints : number
 	BusinessClassPoints : number
 	FirstClassPoints : number
+	FlightDuration : number
+	FullTimeHours : number
+	FullTimeMinutes : number
 }

@@ -13,13 +13,17 @@ import { User } from 'src/modules/app/model/User';
   styleUrls: ['./new-reservation-modal.component.scss']
 })
 export class NewReservationModalComponent implements OnInit {
-  flight: Flight;
+  flight: Flight[][];
   currentUserId: number;
   user: User;
   discountPriceEconomy: number;
   discountPriceBusiness: number;
   discountPriceFirst: number;
   points: number = 0;
+  remainingFirstClassSeats: boolean = true;
+  remainingBusinessClassSeats: boolean = true;
+  remainingEconomyClassSeats: boolean = true;
+  oneFlight : boolean = false;
 
   constructor(
     public modalRef: MdbModalRef<NewReservationModalComponent>,
@@ -32,12 +36,35 @@ export class NewReservationModalComponent implements OnInit {
     this.userService.getUserById(this.currentUserId).subscribe((response) => {
       this.user = response;
     });
+
+    console.log(this.flight)
+    for (var f of this.flight) {
+      if (f != null) {
+        for (var f2 of f) {
+          if (f2.EconomyClassRemainingSeats == 0) {
+            this.remainingEconomyClassSeats = false;
+          }
+          if (f2.BusinessClassRemainingSeats == 0) {
+            this.remainingBusinessClassSeats = false;
+          }
+          if (f2.FirstClassRemainingSeats == 0) {
+            this.remainingFirstClassSeats = false;
+          }
+        }
+      } else {
+        this.oneFlight = true;
+      }
+    }
   }
 
   newFirstClassTicket() {
     let price = 0;
     if (this.points == 0) {
-      price = this.flight.FirstClassPrice;
+      for (var f of this.flight) {
+        for (var f2 of f) {
+          price += f2.FirstClassPrice;
+        }
+      }
     } else {
       price = this.discountPriceFirst;
     }
@@ -46,39 +73,43 @@ export class NewReservationModalComponent implements OnInit {
       this.toastr.error("You do not have enough money! Account balance: " + this.user.AccountBalance)
     } else {
 
-      let seatInt = this.getRandomInt(0, this.flight.FirstClassRemainingSeats);
-      let fullSeatNumber= seatInt.toString() + this.getRandomString(1, "seat");
+      for (var f of this.flight) {
+        for (var f2 of f) {
+          let seatInt = this.getRandomInt(0, f2.FirstClassRemainingSeats);
+          let fullSeatNumber= seatInt.toString() + this.getRandomString(1, "seat");
 
-      let gateInt = this.getRandomInt(0, 2);
-      let fullGateNumber= gateInt.toString() + this.getRandomString(1, "gate");
+          let gateInt = this.getRandomInt(0, 2);
+          let fullGateNumber= gateInt.toString() + this.getRandomString(1, "gate");
 
-      const newReservation: Ticket = {
-            Id: 0,
-            FlightNumber: this.flight.FlightNumber,
-            PlaceOfDeparture: this.flight.PlaceOfDeparture,
-            PlaceOfArrival: this.flight.PlaceOfArrival,
-            DateOfDeparture: this.flight.DateOfDeparture,
-            DateOfArrival: this.flight.DateOfArrival,
-            TimeOfDeparture: this.flight.TimeOfDeparture,
-            TimeOfArrival: this.flight.TimeOfArrival,
-            AirlineName: this.flight.Airline,
-            TravelClass: "FIRST",
-            Price: this.flight.FirstClassPrice,
-            SeatNumber: fullSeatNumber,
-            GateNumber: fullGateNumber,
-            UserId: this.currentUserId,
-            TimeOfBoarding: this.flight.TimeOfBoarding,
-            LosePoints: this.flight.FirstClassPoints * 2
-      };
+          const newReservation: Ticket = {
+                Id: 0,
+                FlightNumber: f2.FlightNumber,
+                PlaceOfDeparture: f2.PlaceOfDeparture,
+                PlaceOfArrival: f2.PlaceOfArrival,
+                DateOfDeparture: f2.DateOfDeparture,
+                DateOfArrival: f2.DateOfArrival,
+                TimeOfDeparture: f2.TimeOfDeparture,
+                TimeOfArrival: f2.TimeOfArrival,
+                AirlineName: f2.Airline,
+                TravelClass: "FIRST",
+                Price: f2.FirstClassPrice,
+                SeatNumber: fullSeatNumber,
+                GateNumber: fullGateNumber,
+                UserId: this.currentUserId,
+                TimeOfBoarding: f2.TimeOfBoarding,
+                LosePoints: f2.FirstClassPoints * 2
+          };
 
-      this.flight.FirstClassRemainingSeats = this.flight.FirstClassRemainingSeats - 1;
-      this.bookATicket(newReservation);
-      this.userService.winPoints(this.flight.FirstClassPoints, this.currentUserId);
-      
-      if (this.points == 0) {
-        this.userService.buyTicket(this.flight.FirstClassPrice, this.currentUserId);
-      } else {
-        this.userService.buyTicket(this.discountPriceFirst, this.currentUserId);
+          f2.FirstClassRemainingSeats = f2.FirstClassRemainingSeats - 1;
+          this.bookATicket(newReservation);
+          this.userService.winPoints(f2.FirstClassPoints, this.currentUserId);
+          
+          if (this.points == 0) {
+            this.userService.buyTicket(f2.FirstClassPrice, this.currentUserId);
+          } else {
+            this.userService.buyTicket(this.discountPriceFirst, this.currentUserId);
+          }
+        }
       }
     }
   }
@@ -86,7 +117,11 @@ export class NewReservationModalComponent implements OnInit {
   newBusinessClassTicket() {
     let price = 0;
     if (this.points == 0) {
-      price = this.flight.BusinessClassPrice;
+      for (var f of this.flight) {
+        for (var f2 of f) {
+          price += f2.BusinessClassPrice;
+        }
+      }
     } else {
       price = this.discountPriceBusiness;
     }
@@ -95,39 +130,43 @@ export class NewReservationModalComponent implements OnInit {
       this.toastr.error("You do not have enough money! Account balance: " + this.user.AccountBalance)
     } else {
 
-      let seatInt = this.getRandomInt(0, this.flight.BusinessClassRemainingSeats);
-      let fullSeatNumber= seatInt.toString() + this.getRandomString(1, "seat");
+      for (var f of this.flight) {
+        for (var f2 of f) {
+          let seatInt = this.getRandomInt(0, f2.BusinessClassRemainingSeats);
+          let fullSeatNumber= seatInt.toString() + this.getRandomString(1, "seat");
 
-      let gateInt = this.getRandomInt(0, 2);
-      let fullGateNumber= gateInt.toString() + this.getRandomString(1, "gate");
+          let gateInt = this.getRandomInt(0, 2);
+          let fullGateNumber= gateInt.toString() + this.getRandomString(1, "gate");
 
-      const newReservation: Ticket = {
-            Id: 0,
-            FlightNumber: this.flight.FlightNumber,
-            PlaceOfDeparture: this.flight.PlaceOfDeparture,
-            PlaceOfArrival: this.flight.PlaceOfArrival,
-            DateOfDeparture: this.flight.DateOfDeparture,
-            DateOfArrival: this.flight.DateOfArrival,
-            TimeOfDeparture: this.flight.TimeOfDeparture,
-            TimeOfArrival: this.flight.TimeOfArrival,
-            AirlineName: this.flight.Airline,
-            TravelClass: "BUSINESS",
-            Price: this.flight.BusinessClassPrice,
-            SeatNumber: fullSeatNumber,
-            GateNumber: fullGateNumber,
-            UserId: this.currentUserId,
-            TimeOfBoarding: this.flight.TimeOfBoarding,
-            LosePoints: this.flight.BusinessClassPoints * 2
-      };
-      
-      this.flight.BusinessClassRemainingSeats = this.flight.BusinessClassRemainingSeats - 1;
-      this.bookATicket(newReservation);
-      this.userService.winPoints(this.flight.BusinessClassPoints, this.currentUserId);
+          const newReservation: Ticket = {
+                Id: 0,
+                FlightNumber: f2.FlightNumber,
+                PlaceOfDeparture: f2.PlaceOfDeparture,
+                PlaceOfArrival: f2.PlaceOfArrival,
+                DateOfDeparture: f2.DateOfDeparture,
+                DateOfArrival: f2.DateOfArrival,
+                TimeOfDeparture: f2.TimeOfDeparture,
+                TimeOfArrival: f2.TimeOfArrival,
+                AirlineName: f2.Airline,
+                TravelClass: "BUSINESS",
+                Price: f2.BusinessClassPrice,
+                SeatNumber: fullSeatNumber,
+                GateNumber: fullGateNumber,
+                UserId: this.currentUserId,
+                TimeOfBoarding: f2.TimeOfBoarding,
+                LosePoints: f2.BusinessClassPoints * 2
+          };
+          
+          f2.BusinessClassRemainingSeats = f2.BusinessClassRemainingSeats - 1;
+          this.bookATicket(newReservation);
+          this.userService.winPoints(f2.BusinessClassPoints, this.currentUserId);
 
-      if (this.points == 0) {
-        this.userService.buyTicket(this.flight.BusinessClassPrice, this.currentUserId);
-      } else {
-        this.userService.buyTicket(this.discountPriceBusiness, this.currentUserId);
+          if (this.points == 0) {
+            this.userService.buyTicket(f2.BusinessClassPrice, this.currentUserId);
+          } else {
+            this.userService.buyTicket(this.discountPriceBusiness, this.currentUserId);
+          }
+        }
       }
     }
   }
@@ -135,7 +174,13 @@ export class NewReservationModalComponent implements OnInit {
   newEconomyClassTicket() {
     let price = 0;
     if (this.points == 0) {
-      price = this.flight.EconomyClassPrice;
+      for (var f of this.flight) {
+        if (f != null) {
+          for (var f2 of f) {
+            price += f2.EconomyClassPrice;
+          }
+        }
+      }
     } else {
       price = this.discountPriceEconomy;
     }
@@ -144,40 +189,44 @@ export class NewReservationModalComponent implements OnInit {
       this.toastr.error("You do not have enough money! Account balance: " + this.user.AccountBalance)
     } else {
 
-      let seatInt = this.getRandomInt(0, this.flight.EconomyClassRemainingSeats);
-      let fullSeatNumber= seatInt.toString() + this.getRandomString(1, "seat");
+      for (var f of this.flight) {
+        for (var f2 of f) {
+          let seatInt = this.getRandomInt(0, f2.EconomyClassRemainingSeats);
+          let fullSeatNumber= seatInt.toString() + this.getRandomString(1, "seat");
 
-      let gateInt = this.getRandomInt(0, 2);
-      let fullGateNumber= gateInt.toString() + this.getRandomString(1, "gate");
+          let gateInt = this.getRandomInt(0, 2);
+          let fullGateNumber= gateInt.toString() + this.getRandomString(1, "gate");
 
-      const newReservation: Ticket = {
-            Id: 0,
-            FlightNumber: this.flight.FlightNumber,
-            PlaceOfDeparture: this.flight.PlaceOfDeparture,
-            PlaceOfArrival: this.flight.PlaceOfArrival,
-            DateOfDeparture: this.flight.DateOfDeparture,
-            DateOfArrival: this.flight.DateOfArrival,
-            TimeOfDeparture: this.flight.TimeOfDeparture,
-            TimeOfArrival: this.flight.TimeOfArrival,
-            AirlineName: this.flight.Airline,
-            TravelClass: "ECONOMY",
-            Price: this.flight.EconomyClassPrice,
-            SeatNumber: fullSeatNumber,
-            GateNumber: fullGateNumber,
-            UserId: this.currentUserId,
-            TimeOfBoarding: this.flight.TimeOfBoarding,
-            LosePoints: this.flight.EconomyClassPoints * 2
-      };
+          const newReservation: Ticket = {
+                Id: 0,
+                FlightNumber: f2.FlightNumber,
+                PlaceOfDeparture: f2.PlaceOfDeparture,
+                PlaceOfArrival: f2.PlaceOfArrival,
+                DateOfDeparture: f2.DateOfDeparture,
+                DateOfArrival: f2.DateOfArrival,
+                TimeOfDeparture: f2.TimeOfDeparture,
+                TimeOfArrival: f2.TimeOfArrival,
+                AirlineName: f2.Airline,
+                TravelClass: "ECONOMY",
+                Price: f2.EconomyClassPrice,
+                SeatNumber: fullSeatNumber,
+                GateNumber: fullGateNumber,
+                UserId: this.currentUserId,
+                TimeOfBoarding: f2.TimeOfBoarding,
+                LosePoints: f2.EconomyClassPoints * 2
+          };
 
-      this.flight.EconomyClassRemainingSeats = this.flight.EconomyClassRemainingSeats - 1;
-      this.bookATicket(newReservation);
-      this.userService.winPoints(this.flight.EconomyClassPoints, this.currentUserId);
-      this.userService.buyTicket(this.flight.EconomyClassPrice, this.currentUserId);
+          f2.EconomyClassRemainingSeats = f2.EconomyClassRemainingSeats - 1;
+          this.bookATicket(newReservation);
+          this.userService.winPoints(f2.EconomyClassPoints, this.currentUserId);
+          this.userService.buyTicket(f2.EconomyClassPrice, this.currentUserId);
 
-      if (this.points == 0) {
-        this.userService.buyTicket(this.flight.EconomyClassPrice, this.currentUserId);
-      } else {
-        this.userService.buyTicket(this.discountPriceEconomy, this.currentUserId);
+          if (this.points == 0) {
+            this.userService.buyTicket(f2.EconomyClassPrice, this.currentUserId);
+          } else {
+            this.userService.buyTicket(this.discountPriceEconomy, this.currentUserId);
+          }
+        }
       }
     }
   }
@@ -205,19 +254,25 @@ export class NewReservationModalComponent implements OnInit {
 
   bookATicket(ticket: Ticket) {
     if (this.points != 0) {
-      this.userService.losePoints(this.points, this.user.Id)
+      this.userService.losePoints(this.points, this.user.ID)
     }
     this.userService.bookATicket(ticket);
     this.userService.sendEmail(this.user.EmailAddress);
-    this.userService.updateRemainingSeats(this.flight);
+    for (var f of this.flight) {
+      for (var f2 of f) {
+        this.userService.updateRemainingSeats(f2);
+      }
+    }
     this.modalRef.close();
-    this.router.navigate(["admin/all-flights"],
+    this.router.navigate(["base/admin/all-flights"],
             { queryParams: { 
                 flyingFrom: '', 
                 flyingTo: '', 
                 departing: '', 
+                returning: '',
                 passengerNumber: '', 
-                travelClass: 1
+                travelClass: 1,
+                isReturn: true
               },
       },);
   }
@@ -239,14 +294,27 @@ export class NewReservationModalComponent implements OnInit {
       this.points = Number((<HTMLInputElement>document.getElementById("points")).value);
       let discount = (Number((<HTMLInputElement>document.getElementById("points")).value) * 2) / 100;
 
-      let discountPriceEconomy = this.flight.EconomyClassPrice * discount;
-      this.discountPriceEconomy = this.flight.EconomyClassPrice - discountPriceEconomy;
-
-      let discountPriceBusiness = this.flight.BusinessClassPrice * discount;
-      this.discountPriceBusiness = this.flight.BusinessClassPrice - discountPriceBusiness;
-
-      let discountPriceFirst = this.flight.FirstClassPrice * discount;
-      this.discountPriceFirst = this.flight.FirstClassPrice - discountPriceFirst;
+      let discountPriceE = 0;
+      let discountPriceB = 0;
+      let discountPriceF = 0;
+      
+      for (var f of this.flight) {
+        if (f != null) {
+          for (var f2 of f) {
+            let discountPriceEconomy = f2.EconomyClassPrice * discount;
+            discountPriceE += f2.EconomyClassPrice - discountPriceEconomy;
+      
+            let discountPriceBusiness = f2.BusinessClassPrice * discount;
+            discountPriceB += f2.BusinessClassPrice - discountPriceBusiness;
+      
+            let discountPriceFirst = f2.FirstClassPrice * discount;
+            discountPriceF += f2.FirstClassPrice - discountPriceFirst;
+          }
+        }
+      }
+      this.discountPriceEconomy = Math.round((discountPriceE + Number.EPSILON) * 100) / 100;
+      this.discountPriceBusiness = Math.round((discountPriceB + Number.EPSILON) * 100) / 100;
+      this.discountPriceFirst = Math.round((discountPriceF + Number.EPSILON) * 100) / 100;
     }
   }
 

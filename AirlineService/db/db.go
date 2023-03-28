@@ -23,6 +23,10 @@ var airlines = []model.Airline{
 	},
 	{
 		Model: gorm.Model{},
+		Name:  "ITA Airways",
+	},
+	{
+		Model: gorm.Model{},
 		Name:  "Lufthansa",
 	},
 	{
@@ -47,15 +51,15 @@ var airlines = []model.Airline{
 	},
 	{
 		Model: gorm.Model{},
-		Name:  "JetBlue",
+		Name:  "Wizz Air",
 	},
 	{
 		Model: gorm.Model{},
-		Name:  "Saudi Arabian Airlines",
+		Name:  "Swiss",
 	},
 	{
 		Model: gorm.Model{},
-		Name:  "Alitalia",
+		Name:  "Austrian Airlines",
 	},
 }
 

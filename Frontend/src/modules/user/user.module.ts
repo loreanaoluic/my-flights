@@ -7,12 +7,16 @@ import { RouterModule } from '@angular/router';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FormsModule } from '@angular/forms';
 import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
+import { HistoryComponent } from './components/history/history.component';
+import { HistoryPageComponent } from './pages/history-page/history-page.component';
 
 @NgModule({
   declarations: [
     MyTicketsComponent,
     MyTicketsPageComponent,
-    CancelReservationModalComponent
+    CancelReservationModalComponent,
+    HistoryComponent,
+    HistoryPageComponent
   ],
   imports: [
     CommonModule,

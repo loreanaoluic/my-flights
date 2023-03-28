@@ -13,7 +13,7 @@ export class HomeComponent {
   ) { }
 
   bookAFlight() {
-    this.router.navigate(["guest/search-flights"]);
+    this.router.navigate(["base/guest/search-flights"]);
   }
 
 }

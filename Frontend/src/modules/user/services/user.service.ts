@@ -59,6 +59,13 @@ export class UserService {
     });
   }
 
+  getHistoryByUserId(id: number): Observable<Ticket[]>{
+    return this.http.get<Ticket[]>("http://localhost:8080/api/reservations/get-history/" + id, {
+      headers: this.headers,
+      responseType: "json",
+    });
+  }
+
   bookATicket(ticket: Ticket): void{
     this.http.post<Ticket>("http://localhost:8080/api/reservations/book", ticket, {
       headers: this.headers,

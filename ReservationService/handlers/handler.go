@@ -36,6 +36,19 @@ func (rh *TicketsHandler) FindTicketsByUserId(w http.ResponseWriter, r *http.Req
 	json.NewEncoder(w).Encode(ticketsDTO)
 }
 
+func (rh *TicketsHandler) FindHistoryByUserId(w http.ResponseWriter, r *http.Request) {
+
+	AdjustResponseHeaderJson(&w)
+
+	params := mux.Vars(r)
+	idStr := params["id"]
+	id, _ := strconv.ParseInt(idStr, 10, 64)
+
+	ticketsDTO, _, _ := rh.repository.FindHistoryByUserId(uint(id), r)
+
+	json.NewEncoder(w).Encode(ticketsDTO)
+}
+
 func (rh *TicketsHandler) CreateTicket(w http.ResponseWriter, r *http.Request) {
 	AdjustResponseHeaderJson(&w)
 

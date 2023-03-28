@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Login } from 'src/modules/app/model/Login';
 import { AuthService } from 'src/modules/app/services/auth.service';
 import { Router } from '@angular/router';
-import { Token } from 'src/modules/app/model/Token';
 import { ToastrService } from 'ngx-toastr';
 import { Register } from '../../model/Register';
 import { JwtHelperService } from "@auth0/angular-jwt";
@@ -41,16 +40,19 @@ export class LoginComponent {
             const info = jwt.decodeToken(tokenString);
             const role = info.role;
 
-            if(role === "ADMIN") this.router.navigate(["admin/all-flights"],
+            if(role === "ADMIN") this.router.navigate(["base/admin/all-flights"],
             { queryParams: { 
                 flyingFrom: '', 
                 flyingTo: '', 
                 departing: '', 
+                returning: '',
                 passengerNumber: '', 
-                travelClass: 1
+                travelClass: 1,
+                isReturn: true,
+                stop: 1
               },
             },);
-            if(role === "USER") this.router.navigate(["guest/search-flights"]);
+            if(role === "USER") this.router.navigate(["base/guest/search-flights"]);
           }
         },
         error: (error) => {

@@ -12,6 +12,8 @@ import { NewFlightModalComponent } from './modals/new-flight-modal/new-flight-mo
 import { UpdateFlightModalComponent } from './modals/update-flight-modal/update-flight-modal.component';
 import { NewReservationModalComponent } from './modals/new-reservation-modal/new-reservation-modal.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DetailedInformationModalComponent } from './modals/detailed-information-modal/detailed-information-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,14 +23,17 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     SearchFlightsPageComponent,
     NewFlightModalComponent,
     UpdateFlightModalComponent,
-    NewReservationModalComponent
+    NewReservationModalComponent,
+    DetailedInformationModalComponent,
   ],
   imports: [
     CommonModule,
     Ng2SearchPipeModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forChild(GuestRoutes)
+    ReactiveFormsModule,
+    RouterModule.forChild(GuestRoutes),
+    
   ],
   exports: [
     AllFlightsComponent

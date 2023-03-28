@@ -6,31 +6,34 @@
       <div class="collapse navbar-collapse" id="navbarToggler">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item" *ngIf="currentRole === 'USER'">
-                <a class="nav-link" href="guest/search-flights">BOOK A FLIGHT</a>
+                <a class="nav-link" href="base/guest/search-flights">BOOK A FLIGHT</a>
             </li>
             <li class="nav-item" *ngIf="currentRole === 'USER'">
-              <a class="nav-link" href="user/my-tickets">MY TICKETS</a>
+              <a class="nav-link" href="base/user/my-tickets">MY TICKETS</a>
+            </li>
+            <li class="nav-item" *ngIf="currentRole === 'USER'">
+              <a class="nav-link" href="base/user/history">HISTORY</a>
             </li>
             <li class="nav-item" *ngIf="currentRole === 'ADMIN'">
               <button class="nav-link" type="submit" (click)="navigateAllFlights()">ALL FLIGHTS</button>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="admin/all-airlines">ALL AIRLINES</a>
+              <a class="nav-link" href="base/admin/all-airlines">ALL AIRLINES</a>
             </li>
             <li class="nav-item" *ngIf="currentRole === 'ADMIN'">
-              <a class="nav-link" href="admin/all-users">ALL USERS</a>
+              <a class="nav-link" href="base/admin/all-users">ALL USERS</a>
             </li>
             <li class="nav-item" *ngIf="currentRole === 'ADMIN'" style="margin-left: 740px;">
-              <a class="nav-link" href="my-profile">MY PROFILE</a>
+              <a class="nav-link" href="base/my-profile">MY PROFILE</a>
             </li>
             <li class="nav-item" *ngIf="currentRole === 'USER'" style="margin-left: 720px;">
-              <a class="nav-link" href="my-profile">MY PROFILE</a>
+              <a class="nav-link" href="base/my-profile">MY PROFILE</a>
             </li>
         </ul>
         <form class="d-flex">
-          <button class="btn btn-outline-dark" style="font-family: 'Bebas Neue'; font-size: 20px;" type="submit" 
+          <button class="btn" style="font-family: 'Bebas Neue'; font-size: 18px;" type="submit" 
           *ngIf="currentRole === undefined" (click)="signIn()">SIGN IN</button>
-          <button class="btn btn-outline-dark" style="font-family: 'Bebas Neue'; font-size: 20px;" type="submit" 
+          <button class="btn" style="font-family: 'Bebas Neue'; font-size: 18px;" type="submit" 
           *ngIf="currentRole !== undefined" (click)="logOut()">LOG OUT</button>
         </form>
       </div>

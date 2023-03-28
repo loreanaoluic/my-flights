@@ -23,28 +23,62 @@ export class GuestService {
     });
   }
 
-  searchFlights(flyingFrom: string, flyingTo: string, departing: string, passengerNumber: string, 
-    travelClass: string): Observable<Flight[]>{
+  searchFlights(flyingFrom: string, flyingTo: string, departing: string, returning: string, passengerNumber: string, 
+    travelClass: string, isReturn: string): Observable<Flight[][][]>{
       if (!flyingFrom)
         flyingFrom = ''
       if (!flyingTo)
         flyingTo = ''
       if (!departing)
         departing = ''
+      if (!returning)
+        returning = ''
       if (!passengerNumber)
         passengerNumber = ''
       if (!travelClass)
         travelClass = ''
+      if (!isReturn)
+        isReturn = ''
 
-    return this.http.get<Flight[]>("http://localhost:8080/api/flights/search-all-flights", {
+    return this.http.get<Flight[][][]>("http://localhost:8080/api/flights/search-all-flights", {
       headers: this.headers,
       responseType: "json",
       params: {
         flyingFrom: flyingFrom, 
         flyingTo: flyingTo, 
         departing: departing, 
+        returning: returning,
         passengerNumber: passengerNumber, 
-        travelClass: travelClass
+        travelClass: travelClass,
+        isReturn: isReturn
+      }
+    });
+  }
+
+  sortFlights(sort: number, flyingFrom: string, flyingTo: string, departing: string, returning: string, 
+    passengerNumber: string, travelClass: number, isReturn: boolean): Observable<Flight[][][]>{
+      if (!flyingFrom)
+        flyingFrom = ''
+      if (!flyingTo)
+        flyingTo = ''
+      if (!departing)
+        departing = ''
+      if (!returning)
+        returning = ''
+      if (!passengerNumber)
+        passengerNumber = ''
+        
+    return this.http.get<Flight[][][]>("http://localhost:8080/api/flights/sort-flights/" + sort, {
+      headers: this.headers,
+      responseType: "json",
+      params: {
+        flyingFrom: flyingFrom, 
+        flyingTo: flyingTo, 
+        departing: departing, 
+        returning: returning,
+        passengerNumber: passengerNumber, 
+        travelClass: travelClass,
+        isReturn: isReturn
       }
     });
   }
