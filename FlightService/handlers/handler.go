@@ -58,6 +58,14 @@ func (rh *FlightsHandler) CancelFlight(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(*flightDTO)
 }
 
+func (rh *FlightsHandler) SortFlights(w http.ResponseWriter, r *http.Request) {
+	AdjustResponseHeaderJson(&w)
+
+	cheapestFlights, _ := rh.repository.SortFlights(r)
+
+	json.NewEncoder(w).Encode(cheapestFlights)
+}
+
 func (rh *FlightsHandler) CreateFlight(w http.ResponseWriter, r *http.Request) {
 	AdjustResponseHeaderJson(&w)
 

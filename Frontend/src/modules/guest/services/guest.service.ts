@@ -55,8 +55,8 @@ export class GuestService {
     });
   }
 
-  sortFlights(sort: number, flyingFrom: string, flyingTo: string, departing: string, returning: string, 
-    passengerNumber: string, travelClass: number, isReturn: boolean): Observable<Flight[][][]>{
+  sortFlights(flyingFrom: string, flyingTo: string, departing: string, returning: string, 
+    passengerNumber: string, travelClass: number, isReturn: boolean): Observable<string[]>{
       if (!flyingFrom)
         flyingFrom = ''
       if (!flyingTo)
@@ -68,7 +68,7 @@ export class GuestService {
       if (!passengerNumber)
         passengerNumber = ''
         
-    return this.http.get<Flight[][][]>("http://localhost:8080/api/flights/sort-flights/" + sort, {
+    return this.http.get<string[]>("http://localhost:8080/api/flights/sort-flights", {
       headers: this.headers,
       responseType: "json",
       params: {

@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/my-flights/ApiGateway/utils"
@@ -38,7 +39,34 @@ func SearchFlights(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 
 	flyingFrom := queryParams.Get("flyingFrom")
+
+	var counter = 0
+	if strings.Contains(flyingFrom, " ") {
+		from := strings.Split(flyingFrom, " ")
+		flyingFrom = ""
+		for _, f := range from {
+			flyingFrom += f
+			counter++
+			if counter != len(from) {
+				flyingFrom += "%20"
+			}
+		}
+	}
+
 	flyingTo := queryParams.Get("flyingTo")
+	counter = 0
+	if strings.Contains(flyingTo, " ") {
+		to := strings.Split(flyingTo, " ")
+		flyingTo = ""
+		for _, f := range to {
+			flyingTo += f
+			counter++
+			if counter != len(to) {
+				flyingTo += "%20"
+			}
+		}
+	}
+
 	departing := queryParams.Get("departing")
 	returning := queryParams.Get("returning")
 	passengerNumber := queryParams.Get("passengerNumber")
@@ -77,6 +105,61 @@ func CancelFlight(w http.ResponseWriter, r *http.Request) {
 
 	client := &http.Client{}
 	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	utils.DelegateResponse(response, w)
+}
+
+func SortFlights(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	utils.SetupResponse(&w, r)
+
+	queryParams := r.URL.Query()
+
+	flyingFrom := queryParams.Get("flyingFrom")
+
+	var counter = 0
+	if strings.Contains(flyingFrom, " ") {
+		from := strings.Split(flyingFrom, " ")
+		flyingFrom = ""
+		for _, f := range from {
+			flyingFrom += f
+			counter++
+			if counter != len(from) {
+				flyingFrom += "%20"
+			}
+		}
+	}
+
+	flyingTo := queryParams.Get("flyingTo")
+	counter = 0
+	if strings.Contains(flyingTo, " ") {
+		to := strings.Split(flyingTo, " ")
+		flyingTo = ""
+		for _, f := range to {
+			flyingTo += f
+			counter++
+			if counter != len(to) {
+				flyingTo += "%20"
+			}
+		}
+	}
+
+	departing := queryParams.Get("departing")
+	returning := queryParams.Get("returning")
+	passengerNumber := queryParams.Get("passengerNumber")
+	travelClass := queryParams.Get("travelClass")
+	isReturn := queryParams.Get("isReturn")
+
+	response, err := http.Get(
+		utils.BaseFlightService.Next().Host + FlightsServiceApi + "/sort-flights?flyingFrom=" +
+			flyingFrom + "&flyingTo=" + flyingTo + "&departing=" + departing + "&returning=" + returning + "&passengerNumber=" +
+			passengerNumber + "&travelClass=" + travelClass + "&isReturn=" + isReturn)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)

@@ -43,6 +43,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/flights/cancel/{id}", handlers.CancelFlight).Methods(http.MethodPost)
 	router.HandleFunc("/api/flights/create", handlers.CreateFlight).Methods(http.MethodPost)
 	router.HandleFunc("/api/flights/update", handlers.UpdateFlight).Methods(http.MethodPut)
+	router.HandleFunc("/api/flights/sort-flights", handlers.SortFlights).Methods(http.MethodGet)
 
 	// Airline Service
 	router.HandleFunc("/api/airlines/get-all-airlines", handlers.FindAllAirlines).Methods(http.MethodGet)

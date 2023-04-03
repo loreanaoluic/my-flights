@@ -3,9 +3,11 @@ package repository
 import (
 	"errors"
 	"fmt"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/my-flights/FlightService/model"
@@ -95,12 +97,12 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// DIRECT FLIGHTS
 		result := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
-				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+				"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(economy_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
-				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
+				flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -113,10 +115,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// 1 STOP
 		result2 := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(economy_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -132,11 +134,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
-					"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+					"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 					"(economy_class_remaining_seats >= ?)",
-					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 					passengerNumber,
 				).
 				Find(&flightsHelp2)
@@ -145,10 +147,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 				return nil, totalResults, result.Error
 			}
 
-			var addFlights []*model.Flight
-
 			if len(flightsHelp2) != 0 {
 				for _, flight2 := range flightsHelp2 {
+					var addFlights []*model.Flight
+
 					layout := "2006-01-02 15:04"
 					arrival := flight.DateOfArrival + " " + flight.TimeOfArrival
 					departure := flight2.DateOfDeparture + " " + flight2.TimeOfDeparture
@@ -171,10 +173,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// 2 STOPS
 		result3 := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(economy_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -185,11 +187,15 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		}
 
 		for _, flight := range flights2SHelp {
+			if flight.PlaceOfArrival == flyingTo {
+				continue
+			}
+
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"(economy_class_remaining_seats >= ?)",
-					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
 					passengerNumber,
 				).
 				Find(&flights2SHelp2)
@@ -203,11 +209,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
-						"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+						"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 						"(economy_class_remaining_seats >= ?)",
-						flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
-						flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+						flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+						flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 						passengerNumber,
 					).
 					Find(&flightsHelp2)
@@ -216,10 +222,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 					return nil, totalResults, result.Error
 				}
 
-				var addFlights []*model.Flight
-
 				if len(flightsHelp2) != 0 {
 					for _, flight3 := range flightsHelp2 {
+						var addFlights []*model.Flight
+
 						layout := "2006-01-02 15:04"
 						flightCalc := flight.DateOfArrival + " " + flight.TimeOfArrival
 						flight2Calc := flight2.DateOfDeparture + " " + flight2.TimeOfDeparture
@@ -228,11 +234,16 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 						flight2Time, _ := time.Parse(layout, flight2Calc)
 						flight3Time, _ := time.Parse(layout, flight3Calc)
 
+						difference := flight2Time.Sub(flightTime)
+						difference2 := flight3Time.Sub(flight2Time)
+
 						if flightTime.Before(flight2Time) && flight2Time.Before(flight3Time) {
-							addFlights = append(addFlights, flight)
-							addFlights = append(addFlights, flight2)
-							addFlights = append(addFlights, flight3)
-							flights2S = append(flights2S, addFlights)
+							if difference.Hours() < 10 && difference2.Hours() < 10 {
+								addFlights = append(addFlights, flight)
+								addFlights = append(addFlights, flight2)
+								addFlights = append(addFlights, flight3)
+								flights2S = append(flights2S, addFlights)
+							}
 						}
 					}
 				}
@@ -244,12 +255,12 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// DIRECT FLIGHTS
 		result := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
-				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+				"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(business_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
-				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
+				flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -262,10 +273,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// 1 STOP
 		result2 := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(business_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -281,11 +292,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
-					"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+					"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 					"(business_class_remaining_seats >= ?)",
-					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 					passengerNumber,
 				).
 				Find(&flightsHelp2)
@@ -294,10 +305,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 				return nil, totalResults, result.Error
 			}
 
-			var addFlights []*model.Flight
-
 			if len(flightsHelp2) != 0 {
 				for _, flight2 := range flightsHelp2 {
+					var addFlights []*model.Flight
+
 					layout := "2006-01-02 15:04"
 					arrival := flight.DateOfArrival + " " + flight.TimeOfArrival
 					departure := flight2.DateOfDeparture + " " + flight2.TimeOfDeparture
@@ -320,10 +331,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// 2 STOPS
 		result3 := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(business_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -334,11 +345,14 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		}
 
 		for _, flight := range flights2SHelp {
+			if flight.PlaceOfArrival == flyingTo {
+				continue
+			}
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"(business_class_remaining_seats >= ?)",
-					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
 					passengerNumber,
 				).
 				Find(&flights2SHelp2)
@@ -352,11 +366,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
-						"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+						"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 						"(business_class_remaining_seats >= ?)",
-						flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
-						flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+						flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%", "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
+						flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 						passengerNumber,
 					).
 					Find(&flightsHelp2)
@@ -365,10 +379,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 					return nil, totalResults, result.Error
 				}
 
-				var addFlights []*model.Flight
-
 				if len(flightsHelp2) != 0 {
 					for _, flight3 := range flightsHelp2 {
+						var addFlights []*model.Flight
+
 						layout := "2006-01-02 15:04"
 						flightCalc := flight.DateOfArrival + " " + flight.TimeOfArrival
 						flight2Calc := flight2.DateOfDeparture + " " + flight2.TimeOfDeparture
@@ -393,12 +407,12 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// DIRECT FLIGHTS
 		result := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
-				"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+				"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(first_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
-				flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
+				flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -411,10 +425,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// 1 STOP
 		result2 := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(first_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -430,11 +444,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
-					"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+					"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 					"(first_class_remaining_seats >= ?)",
-					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 					passengerNumber,
 				).
 				Find(&flightsHelp2)
@@ -443,10 +457,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 				return nil, totalResults, result.Error
 			}
 
-			var addFlights []*model.Flight
-
 			if len(flightsHelp2) != 0 {
 				for _, flight2 := range flightsHelp2 {
+					var addFlights []*model.Flight
+
 					layout := "2006-01-02 15:04"
 					arrival := flight.DateOfArrival + " " + flight.TimeOfArrival
 					departure := flight2.DateOfDeparture + " " + flight2.TimeOfDeparture
@@ -469,10 +483,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		// 2 STOPS
 		result3 := repo.db.Table("flights").
 			Where("(deleted_at IS NULL) and "+
-				"('' = ? or lower(place_of_departure) LIKE ?) and "+
+				"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 				"('' = ? or lower(date_of_departure) LIKE ?) and "+
 				"(first_class_remaining_seats >= ?)",
-				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+				flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 				departing, "%"+strings.ToLower(departing)+"%",
 				passengerNumber,
 			).
@@ -483,11 +497,15 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		}
 
 		for _, flight := range flights2SHelp {
+			if flight.PlaceOfArrival == flyingTo {
+				continue
+			}
+
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"(first_class_remaining_seats >= ?)",
-					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+					flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
 					passengerNumber,
 				).
 				Find(&flights2SHelp2)
@@ -501,11 +519,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
-						"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+						"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 						"(first_class_remaining_seats >= ?)",
-						flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
-						flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+						flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%", "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
+						flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
 						passengerNumber,
 					).
 					Find(&flightsHelp2)
@@ -514,10 +532,10 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 					return nil, totalResults, result.Error
 				}
 
-				var addFlights []*model.Flight
-
 				if len(flightsHelp2) != 0 {
 					for _, flight3 := range flightsHelp2 {
+						var addFlights []*model.Flight
+
 						layout := "2006-01-02 15:04"
 						flightCalc := flight.DateOfArrival + " " + flight.TimeOfArrival
 						flight2Calc := flight2.DateOfDeparture + " " + flight2.TimeOfDeparture
@@ -562,12 +580,12 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// DIRECT FLIGHTS
 			result := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
-					"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+					"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(economy_class_remaining_seats >= ?)",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
-					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
@@ -580,11 +598,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// 1 STOP
 			result2 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(economy_class_remaining_seats >= ?)",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
-					departing, "%"+strings.ToLower(departing)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
 				Find(&returnFlights1SHelp)
@@ -599,11 +617,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
-						"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+						"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 						"(economy_class_remaining_seats >= ?)",
-						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
-						flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+						flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 						passengerNumber,
 					).
 					Find(&returnFlightsHelp2)
@@ -639,11 +657,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// 2 STOPS
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(economy_class_remaining_seats >= ?)",
-					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
-					departing, "%"+strings.ToLower(departing)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
 				Find(&returnFlights2SHelp)
@@ -653,11 +671,12 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			}
 
 			for _, flight := range returnFlights2SHelp {
+
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 						"(economy_class_remaining_seats >= ?)",
-						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
 						passengerNumber,
 					).
 					Find(&returnFlights2SHelp2)
@@ -667,15 +686,19 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 				}
 
 				for _, flight2 := range returnFlights2SHelp2 {
+					if flight2.PlaceOfArrival == flyingTo {
+						continue
+					}
+
 					var flightsHelp2 []*model.Flight
 
 					result3 := repo.db.Table("flights").
 						Where("(deleted_at IS NULL) and "+
-							"('' = ? or lower(place_of_departure) LIKE ?) and "+
-							"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+							"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+							"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 							"(economy_class_remaining_seats >= ?)",
-							flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
-							flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+							flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%", "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
+							flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 							passengerNumber,
 						).
 						Find(&flightsHelp2)
@@ -686,7 +709,6 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 					if len(flightsHelp2) != 0 {
 						for _, flight3 := range flightsHelp2 {
-
 							var addFlights []*model.Flight
 
 							layout := "2006-01-02 15:04"
@@ -700,11 +722,13 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 							difference1 := flight2Time.Sub(flightTime)
 							difference2 := flight3Time.Sub(flight2Time)
 
-							if flightTime.Before(flight2Time) && flight2Time.Before(flight3Time) && difference1.Hours() < 10 && difference2.Hours() < 10 {
-								addFlights = append(addFlights, flight)
-								addFlights = append(addFlights, flight2)
-								addFlights = append(addFlights, flight3)
-								returnFlights2S = append(returnFlights2S, addFlights)
+							if flightTime.Before(flight2Time) && flight2Time.Before(flight3Time) {
+								if difference1.Hours() < 10 && difference2.Hours() < 10 {
+									addFlights = append(addFlights, flight)
+									addFlights = append(addFlights, flight2)
+									addFlights = append(addFlights, flight3)
+									returnFlights2S = append(returnFlights2S, addFlights)
+								}
 							}
 						}
 					}
@@ -716,12 +740,12 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// DIRECT FLIGHTS
 			result := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
-					"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+					"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(business_class_remaining_seats >= ?)",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
-					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
@@ -734,11 +758,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// 1 STOP
 			result2 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(business_class_remaining_seats >= ?)",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
-					departing, "%"+strings.ToLower(departing)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
 				Find(&returnFlights1SHelp)
@@ -753,11 +777,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
-						"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+						"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 						"(business_class_remaining_seats >= ?)",
-						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
-						flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+						flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 						passengerNumber,
 					).
 					Find(&returnFlightsHelp2)
@@ -793,11 +817,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// 2 STOPS
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(business_class_remaining_seats >= ?)",
-					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
-					departing, "%"+strings.ToLower(departing)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
 				Find(&returnFlights2SHelp)
@@ -809,9 +833,9 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			for _, flight := range returnFlights2SHelp {
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 						"(business_class_remaining_seats >= ?)",
-						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
 						passengerNumber,
 					).
 					Find(&returnFlights2SHelp2)
@@ -821,15 +845,19 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 				}
 
 				for _, flight2 := range returnFlights2SHelp2 {
+					if flight2.PlaceOfArrival == flyingTo {
+						continue
+					}
+
 					var flightsHelp2 []*model.Flight
 
 					result3 := repo.db.Table("flights").
 						Where("(deleted_at IS NULL) and "+
-							"('' = ? or lower(place_of_departure) LIKE ?) and "+
-							"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+							"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+							"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 							"(business_class_remaining_seats >= ?)",
-							flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
-							flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+							flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%", "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
+							flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 							passengerNumber,
 						).
 						Find(&flightsHelp2)
@@ -867,12 +895,12 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// DIRECT FLIGHTS
 			result := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
-					"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+					"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(first_class_remaining_seats >= ?)",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
-					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
@@ -885,11 +913,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// 1 STOP
 			result2 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(first_class_remaining_seats >= ?)",
-					flyingTo, "%"+strings.ToLower(flyingTo)+"%",
-					departing, "%"+strings.ToLower(departing)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
 				Find(&returnFlights1SHelp)
@@ -904,11 +932,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
-						"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+						"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 						"(first_class_remaining_seats >= ?)",
-						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
-						flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
+						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+						flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 						passengerNumber,
 					).
 					Find(&returnFlightsHelp2)
@@ -944,11 +972,11 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			// 2 STOPS
 			result3 := repo.db.Table("flights").
 				Where("(deleted_at IS NULL) and "+
-					"('' = ? or lower(place_of_departure) LIKE ?) and "+
+					"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 					"('' = ? or lower(date_of_departure) LIKE ?) and "+
 					"(first_class_remaining_seats >= ?)",
-					flyingFrom, "%"+strings.ToLower(flyingFrom)+"%",
-					departing, "%"+strings.ToLower(departing)+"%",
+					flyingTo, "%"+strings.ToLower(flyingTo)+"%", "%"+strings.ToLower(flyingTo)+"%",
+					returning, "%"+strings.ToLower(returning)+"%",
 					passengerNumber,
 				).
 				Find(&returnFlights2SHelp)
@@ -960,9 +988,9 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 			for _, flight := range returnFlights2SHelp {
 				result3 := repo.db.Table("flights").
 					Where("(deleted_at IS NULL) and "+
-						"('' = ? or lower(place_of_departure) LIKE ?) and "+
+						"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
 						"(first_class_remaining_seats >= ?)",
-						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
+						flight.PlaceOfArrival, "%"+strings.ToLower(flight.PlaceOfArrival)+"%", "%"+strings.ToLower(flight.PlaceOfArrival)+"%",
 						passengerNumber,
 					).
 					Find(&returnFlights2SHelp2)
@@ -972,15 +1000,19 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 				}
 
 				for _, flight2 := range returnFlights2SHelp2 {
+					if flight2.PlaceOfArrival == flyingTo {
+						continue
+					}
+
 					var flightsHelp2 []*model.Flight
 
 					result3 := repo.db.Table("flights").
 						Where("(deleted_at IS NULL) and "+
-							"('' = ? or lower(place_of_departure) LIKE ?) and "+
-							"('' = ? or lower(place_of_arrival) LIKE ?) and "+
+							"('' = ? or lower(place_of_departure) LIKE ? or lower(place_of_departure) = ?) and "+
+							"('' = ? or lower(place_of_arrival) LIKE ? or lower(place_of_arrival) = ?) and "+
 							"(first_class_remaining_seats >= ?)",
-							flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
-							flyingTo, "%"+strings.ToLower(flyingTo)+"%",
+							flight2.PlaceOfArrival, "%"+strings.ToLower(flight2.PlaceOfArrival)+"%", "%"+strings.ToLower(flight2.PlaceOfArrival)+"%",
+							flyingFrom, "%"+strings.ToLower(flyingFrom)+"%", "%"+strings.ToLower(flyingFrom)+"%",
 							passengerNumber,
 						).
 						Find(&flightsHelp2)
@@ -1344,63 +1376,229 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 		allFlights = append(allFlights, flightList)
 	}
 
-	return repo.SortFlights(allFlights, totalResults)
+	return allFlights, totalResults, nil
 }
 
-type Graph struct {
-	NumNodes int
-	NumEdges int
-	Nodes    []Node
-	Edges    [][]Edge
-}
+func dijkstra(graph *WeightedGraph, flyingFrom string) {
 
-type Node struct {
-	Id   int
-	City string
-}
+	visited := make(map[string]bool)
+	heap := &Heap{}
 
-type Edge struct {
-	From   int
-	To     int
-	Flight model.FlightDTO
-	Weight int
-}
+	startNode := graph.GetNode(flyingFrom)
+	startNode.value = 0
+	heap.Push(startNode)
 
-func NewGraph(n, e int) *Graph {
-	return &Graph{
-		NumNodes: n,
-		NumEdges: e,
-		Nodes:    make([]Node, n),
-		Edges:    make([][]Edge, e),
-	}
-}
-
-func (g *Graph) AddNode(n Node) {
-	g.Nodes = append(g.Nodes, n)
-}
-
-func (g *Graph) AddEdge(flight model.FlightDTO, from, to, w int) {
-	g.Edges[from] = append(g.Edges[from], Edge{From: from, To: to, Flight: flight, Weight: w})
-}
-
-func (g *Graph) adjacentEdgesExample() {
-
-	fmt.Printf("Printing all nodes (%d) in graph.\n", len(g.Nodes))
-	for _, node := range g.Nodes {
-		fmt.Printf("Node %d: %s\n", node.Id, node.City)
-	}
-
-	fmt.Println("\nPrinting all edges in graph.")
-	for _, adjacent := range g.Edges {
-		for _, e := range adjacent {
-			fmt.Printf("Edge: %s -> %s (%d -> %d) (%d)\n", e.Flight.PlaceOfDeparture, e.Flight.PlaceOfArrival, e.From, e.To, e.Weight)
+	for heap.Size() > 0 {
+		current := heap.Pop()
+		visited[current.name] = true
+		edges := graph.Edges[current.name]
+		for _, edge := range edges {
+			if !visited[edge.node.name] {
+				heap.Push(edge.node)
+				if current.value+edge.weight < edge.node.value {
+					edge.node.value = current.value + edge.weight
+					edge.node.through = current
+				}
+			}
 		}
 	}
 }
 
-func (repo *Repository) SortFlights(flights [][][]model.FlightDTO, totalResults int64) ([][][]model.FlightDTO, int64, error) {
+func buildGraph(cities []string, flights [][][]model.FlightDTO) *WeightedGraph {
 
-	// ONE WAY
+	graph := NewGraph()
+	nodes := AddNodes(graph, cities)
+
+	for _, flight := range flights {
+		for _, f := range flight[0] {
+			graph.AddEdge(nodes[f.PlaceOfDeparture], nodes[f.PlaceOfArrival], int(f.EconomyClassPrice), f)
+		}
+	}
+
+	return graph
+}
+
+// -- Weighted Graph
+
+type Node struct {
+	name    string
+	value   int
+	through *Node
+}
+
+type Edge struct {
+	node   *Node
+	weight int
+	flight model.FlightDTO
+}
+
+type WeightedGraph struct {
+	Nodes []*Node
+	Edges map[string][]*Edge
+	mutex sync.RWMutex
+}
+
+func NewGraph() *WeightedGraph {
+	return &WeightedGraph{
+		Edges: make(map[string][]*Edge),
+	}
+}
+
+func (g *WeightedGraph) GetNode(name string) (node *Node) {
+	g.mutex.RLock()
+	defer g.mutex.RUnlock()
+	for _, n := range g.Nodes {
+		if n.name == name {
+			node = n
+		}
+	}
+	return
+}
+
+func (g *WeightedGraph) AddNode(n *Node) {
+	g.mutex.Lock()
+	defer g.mutex.Unlock()
+	g.Nodes = append(g.Nodes, n)
+}
+
+func AddNodes(graph *WeightedGraph, names []string) (nodes map[string]*Node) {
+	nodes = make(map[string]*Node)
+	for _, name := range names {
+		n := &Node{name, math.MaxInt, nil}
+		graph.AddNode(n)
+		nodes[name] = n
+	}
+	return
+}
+
+func (g *WeightedGraph) AddEdge(n1, n2 *Node, weight int, flight model.FlightDTO) {
+	g.mutex.Lock()
+	defer g.mutex.Unlock()
+
+	var allEdges = g.Edges[n1.name]
+
+	if len(allEdges) == 0 {
+		g.Edges[n1.name] = append(g.Edges[n1.name], &Edge{n2, weight, flight})
+
+	} else {
+		var contains = false
+		for _, e := range allEdges {
+			if e.flight.FlightNumber == flight.FlightNumber {
+				contains = true
+				break
+			}
+		}
+		if !contains {
+			g.Edges[n1.name] = append(g.Edges[n1.name], &Edge{n2, weight, flight})
+		}
+	}
+	// g.Edges[n2.name] = append(g.Edges[n2.name], &Edge{n1, weight, flight})
+}
+
+func (n *Node) String() string {
+	return n.name
+}
+
+func (e *Edge) String() string {
+	return e.node.String() + "(" + strconv.Itoa(e.weight) + ")"
+}
+
+func (g *WeightedGraph) String() (s string) {
+	g.mutex.RLock()
+	defer g.mutex.RUnlock()
+	for _, n := range g.Nodes {
+		s = s + n.String() + " ->"
+		for _, c := range g.Edges[n.name] {
+			s = s + " " + c.node.String() + " (" + strconv.Itoa(c.weight) + ")"
+		}
+		s = s + "\n"
+	}
+	return
+}
+
+// -- Heap
+
+type Heap struct {
+	elements []*Node
+	mutex    sync.RWMutex
+}
+
+func (h *Heap) Size() int {
+	h.mutex.RLock()
+	defer h.mutex.RUnlock()
+	return len(h.elements)
+}
+
+// push an element to the heap, re-arrange the heap
+func (h *Heap) Push(element *Node) {
+	h.mutex.Lock()
+	defer h.mutex.Unlock()
+	h.elements = append(h.elements, element)
+	i := len(h.elements) - 1
+	for ; h.elements[i].value < h.elements[parent(i)].value; i = parent(i) {
+		h.swap(i, parent(i))
+	}
+}
+
+// pop the top of the heap, which is the min value
+func (h *Heap) Pop() (i *Node) {
+	h.mutex.Lock()
+	defer h.mutex.Unlock()
+	i = h.elements[0]
+	h.elements[0] = h.elements[len(h.elements)-1]
+	h.elements = h.elements[:len(h.elements)-1]
+	h.rearrange(0)
+	return
+}
+
+// rearrange the heap
+func (h *Heap) rearrange(i int) {
+	smallest := i
+	left, right, size := leftChild(i), rightChild(i), len(h.elements)
+	if left < size && h.elements[left].value < h.elements[smallest].value {
+		smallest = left
+	}
+	if right < size && h.elements[right].value < h.elements[smallest].value {
+		smallest = right
+	}
+	if smallest != i {
+		h.swap(i, smallest)
+		h.rearrange(smallest)
+	}
+}
+
+func (h *Heap) swap(i, j int) {
+	h.elements[i], h.elements[j] = h.elements[j], h.elements[i]
+}
+
+func parent(i int) int {
+	return (i - 1) / 2
+}
+
+func leftChild(i int) int {
+	return 2*i + 1
+}
+
+func rightChild(i int) int {
+	return 2*i + 2
+}
+
+func (h *Heap) String() (str string) {
+	return fmt.Sprintf("%q\n", getNames(h.elements))
+}
+
+func getNames(nodes []*Node) (names []string) {
+	for _, node := range nodes {
+		names = append(names, node.name)
+	}
+	return
+}
+
+func (repo *Repository) SortFlights(r *http.Request) ([]string, error) {
+
+	var flights, _, _ = repo.FindAllByParams(r)
+	queryParams := r.URL.Query()
+	flyingFrom := queryParams.Get("flyingFrom")
 
 	var allCities []string
 	var numEdges = 0
@@ -1425,50 +1623,29 @@ func (repo *Repository) SortFlights(flights [][][]model.FlightDTO, totalResults 
 		}
 	}
 
-	myGraph := NewGraph(0, numEdges)
+	graph := buildGraph(cities, flights)
 
-	var nodeId = 0
-	for _, city := range cities {
-		myGraph.AddNode(Node{nodeId, city})
-		nodeId++
-	}
+	dijkstra(graph, flyingFrom)
 
-	for _, flight := range flights {
-		for _, f := range flight[0] {
-			var from = 0
-			for _, city := range cities {
-				if city == f.PlaceOfDeparture {
-					break
-				}
-				from++
-			}
+	// display the nodes
+	fmt.Println()
 
-			var to = 0
-			for _, city := range cities {
-				if city == f.PlaceOfArrival {
-					break
-				}
-				to++
-			}
+	var cheapestFlights []string
+	for _, node := range graph.Nodes {
+		if node.name != flyingFrom {
+			var flightString = "Fly from " + flyingFrom + " to " + node.name + " for " + strconv.Itoa(node.value) + "$!"
+			cheapestFlights = append(cheapestFlights, flightString)
 
-			var containsEdge = false
-			for _, edge := range myGraph.Edges {
-				for _, e := range edge {
-					if e.From == from && e.To == to && e.Weight == int(f.EconomyClassPrice) {
-						containsEdge = true
-					}
-				}
+			fmt.Printf("Cheapest flight from %s to %s is %d\n", flyingFrom, node.name, node.value)
+			for n := node; n.through != nil; n = n.through {
+				fmt.Print(n, " <- ")
 			}
-			if !containsEdge {
-				myGraph.AddEdge(f, from, to, int(f.EconomyClassPrice))
-				myGraph.NumEdges++
-			}
+			fmt.Println(flyingFrom)
+			fmt.Println()
 		}
 	}
 
-	myGraph.adjacentEdgesExample()
-
-	return flights, totalResults, nil
+	return cheapestFlights, nil
 }
 
 func (repo *Repository) CreateFlight(flightDTO *model.FlightDTO) (*model.FlightDTO, error) {
