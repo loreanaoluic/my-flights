@@ -26,7 +26,7 @@ My flights je aplikacija pomoću koje se vrši pretraživanje i rezervacija avio
 <!-- KORISNICI APLIKACIJE -->
 ## Funkcionalnosti korisnika aplikacije
 * <b> Neautentifikovan korisnik: </b> <br>
-  * PREGLED SVIH LETOVA - Omogućen mu je prikaz svih letova i njihova pretraga po kriterijumima kao što su relacija, datum, cena, avio kompanija, status (aktivan, nema dovoljno mesta, otkazan). Prikaz leta podrazumeva nazive mesta odlaska i dolaska, datum i vreme odlaska i dolaska, cenu, naziv avio kompanije, status.
+  * PREGLED SVIH LETOVA - Omogućen mu je prikaz svih letova i njihova pretraga po kriterijumima kao što su relacija, datum, cena, avio kompanija, status (aktivan, nema dovoljno mesta, otkazan). Prikaz leta podrazumeva nazive mesta odlaska i dolaska, datum i vreme odlaska i dolaska, cenu, naziv avio kompanije, status. Takođe, moguće je sortiranje po određenim kriterijumima (najjeftiniji, najmanje presedanja, najkraće vreme trajanja letova).
   * PRIJAVA
   * REGISTRACIJA
 
@@ -58,6 +58,6 @@ My flights je aplikacija pomoću koje se vrši pretraživanje i rezervacija avio
 
 <!-- DIPLOMSKI RAD -->
 ## Diplomski rad
-Implementiranje naprednog algoritma za pretragu (Depth First Search) koji će korisniku omogućiti da prilikom pretrage leta prikaže sve moguće putanje između dva uneta aerodroma. Rezultati će biti rangirani po određenim kriterijumima (najjeftiniji, najmanje presedanja, najkraće vreme trajanja letova, itd.)
+Implementiranje naprednog algoritma za pretragu (Dijkstra's algorithm) koji će korisniku prikazivati najjeftinije letove od željene destinacije do svih ostalih destinacija u okviru dela sa promocijama.
 
 SW-60/2018 Loreana Oluić
