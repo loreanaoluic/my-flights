@@ -211,7 +211,6 @@ export class AllFlightsComponent implements OnInit {
               }
             }
           }
-          console.log(this.flights)
           });
         }
       );

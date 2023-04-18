@@ -1379,45 +1379,6 @@ func (repo *Repository) FindAllByParams(r *http.Request) ([][][]model.FlightDTO,
 	return allFlights, totalResults, nil
 }
 
-func dijkstra(graph *WeightedGraph, flyingFrom string) {
-
-	visited := make(map[string]bool)
-	heap := &Heap{}
-
-	startNode := graph.GetNode(flyingFrom)
-	startNode.value = 0
-	heap.Push(startNode)
-
-	for heap.Size() > 0 {
-		current := heap.Pop()
-		visited[current.name] = true
-		edges := graph.Edges[current.name]
-		for _, edge := range edges {
-			if !visited[edge.node.name] {
-				heap.Push(edge.node)
-				if current.value+edge.weight < edge.node.value {
-					edge.node.value = current.value + edge.weight
-					edge.node.through = current
-				}
-			}
-		}
-	}
-}
-
-func buildGraph(cities []string, flights [][][]model.FlightDTO) *WeightedGraph {
-
-	graph := NewGraph()
-	nodes := AddNodes(graph, cities)
-
-	for _, flight := range flights {
-		for _, f := range flight[0] {
-			graph.AddEdge(nodes[f.PlaceOfDeparture], nodes[f.PlaceOfArrival], int(f.EconomyClassPrice), f)
-		}
-	}
-
-	return graph
-}
-
 // -- Weighted Graph
 
 type Node struct {
@@ -1461,9 +1422,9 @@ func (g *WeightedGraph) AddNode(n *Node) {
 	g.Nodes = append(g.Nodes, n)
 }
 
-func AddNodes(graph *WeightedGraph, names []string) (nodes map[string]*Node) {
+func AddNodes(graph *WeightedGraph, cities []string) (nodes map[string]*Node) {
 	nodes = make(map[string]*Node)
-	for _, name := range names {
+	for _, name := range cities {
 		n := &Node{name, math.MaxInt, nil}
 		graph.AddNode(n)
 		nodes[name] = n
@@ -1492,28 +1453,20 @@ func (g *WeightedGraph) AddEdge(n1, n2 *Node, weight int, flight model.FlightDTO
 			g.Edges[n1.name] = append(g.Edges[n1.name], &Edge{n2, weight, flight})
 		}
 	}
-	// g.Edges[n2.name] = append(g.Edges[n2.name], &Edge{n1, weight, flight})
 }
 
-func (n *Node) String() string {
-	return n.name
-}
+func BuildGraph(cities []string, flights [][][]model.FlightDTO) *WeightedGraph {
 
-func (e *Edge) String() string {
-	return e.node.String() + "(" + strconv.Itoa(e.weight) + ")"
-}
+	graph := NewGraph()
+	nodes := AddNodes(graph, cities)
 
-func (g *WeightedGraph) String() (s string) {
-	g.mutex.RLock()
-	defer g.mutex.RUnlock()
-	for _, n := range g.Nodes {
-		s = s + n.String() + " ->"
-		for _, c := range g.Edges[n.name] {
-			s = s + " " + c.node.String() + " (" + strconv.Itoa(c.weight) + ")"
+	for _, flight := range flights {
+		for _, f := range flight[0] {
+			graph.AddEdge(nodes[f.PlaceOfDeparture], nodes[f.PlaceOfArrival], int(f.EconomyClassPrice), f)
 		}
-		s = s + "\n"
 	}
-	return
+
+	return graph
 }
 
 // -- Heap
@@ -1583,15 +1536,37 @@ func rightChild(i int) int {
 	return 2*i + 2
 }
 
-func (h *Heap) String() (str string) {
-	return fmt.Sprintf("%q\n", getNames(h.elements))
+func (n *Node) String() string {
+	return n.name
 }
 
-func getNames(nodes []*Node) (names []string) {
-	for _, node := range nodes {
-		names = append(names, node.name)
+func (e *Edge) String() string {
+	return e.node.String() + "(" + strconv.Itoa(e.weight) + ")"
+}
+
+func Dijkstra(graph *WeightedGraph, flyingFrom string) {
+
+	visited := make(map[string]bool)
+	heap := &Heap{}
+
+	startNode := graph.GetNode(flyingFrom)
+	startNode.value = 0
+	heap.Push(startNode)
+
+	for heap.Size() > 0 {
+		current := heap.Pop()
+		visited[current.name] = true
+		edges := graph.Edges[current.name]
+		for _, edge := range edges {
+			if !visited[edge.node.name] {
+				heap.Push(edge.node)
+				if current.value+edge.weight < edge.node.value {
+					edge.node.value = current.value + edge.weight
+					edge.node.through = current
+				}
+			}
+		}
 	}
-	return
 }
 
 func (repo *Repository) SortFlights(r *http.Request) ([]string, error) {
@@ -1601,10 +1576,8 @@ func (repo *Repository) SortFlights(r *http.Request) ([]string, error) {
 	flyingFrom := queryParams.Get("flyingFrom")
 
 	var allCities []string
-	var numEdges = 0
 	for _, flight := range flights {
 		for _, f := range flight[0] {
-			numEdges++
 			allCities = append(allCities, f.PlaceOfDeparture)
 			allCities = append(allCities, f.PlaceOfArrival)
 		}
@@ -1623,9 +1596,9 @@ func (repo *Repository) SortFlights(r *http.Request) ([]string, error) {
 		}
 	}
 
-	graph := buildGraph(cities, flights)
+	graph := BuildGraph(cities, flights)
 
-	dijkstra(graph, flyingFrom)
+	Dijkstra(graph, flyingFrom)
 
 	// display the nodes
 	fmt.Println()
