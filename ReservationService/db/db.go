@@ -84,7 +84,7 @@ var tickets = []model.Ticket{
 }
 
 func Init() *gorm.DB {
-	dsn := "host=localhost user=postgres password=loreana dbname=flights port=5432 sslmode=disable"
+	dsn := "host=localhost user=postgres password=loreana dbname=flights-reservation-service port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {

@@ -63,7 +63,7 @@ pub fn seed_db() -> Result<(), Error> {
 
 pub fn get_all_by_airline_id(id: i32) -> Result<String, Error> {
     let mut client = Client::connect(
-        "postgresql://postgres:loreana@localhost:5432/flights",
+        "postgresql://postgres:loreana@localhost:5432/flights-review-service",
         NoTls,
     )?;
 
